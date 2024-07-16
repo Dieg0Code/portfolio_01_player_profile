@@ -1,22 +1,23 @@
-name: "sonar_cloud_scan"
+name: "Build"
 on:
   push:
     branches:
-      - 'main'
-      - 'develop'
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  build:
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 # Actualizado a la versión más reciente
-
-      - name: Set up Go
-        uses: actions/setup-go@v3 # Actualizado a la versión más reciente
+      - uses: actions/checkout@v3
         with:
-          go-version: '${{ env.GO_VERSION }}' # Utiliza una variable de entorno para la versión de Go
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.22.1'
       - name: Cache Go modules
         uses: actions/cache@v3
         with:
@@ -24,17 +25,8 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Sonar Cloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_NAME: ${{ secrets.SONAR_PROJECT_NAME }}
-          SONAR_SOURCES: '.'
-          SONAR_LANGUAGE: 'go'
-          SONAR_PROJECT_VERSION: '1.0'
-          SONAR_GO_TEST_REPORT_PATH: 'report.json'
-          SONAR_GO_COVERAGE_REPORT_PATH: 'coverage.out'

@@ -1,34 +1,44 @@
-# Start from the latest golang base image
+# Primera Etapa: Compilación de la aplicación
 FROM golang:1.22.1 AS builder
 
-# Add Maintainer Info
+# Etiqueta del Mantenedor
 LABEL maintainer="Diego"
 
-# Set the Current Working Directory inside the container
+# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copy go mod and sum files and download dependencies
+# Copiar los archivos go.mod y go.sum y descargar las dependencias
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY . .
+# Copiar el código fuente desde el directorio actual al directorio de trabajo dentro del contenedor
+COPY main.go .
+COPY src/ src/
 
-# Build the Go app
+# Compilar la aplicación Go
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# Start from a smaller base image
-FROM alpine:latest  
 
+# Segunda Etapa: Imagen Final
+FROM alpine:latest
+
+# Instalar certificados CA para permitir conexiones HTTPS
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /root/
+# Agregar un usuario no-root
+RUN adduser -S -D -H -h /app appuser
 
-# Copy the pre-built binary from the previous stage
+# Cambiar al usuario no-root
+USER appuser
+
+# Establecer el directorio de trabajo como /app para el usuario no-root
+WORKDIR /app
+
+# Copiar el binario pre-compilado desde la primera etapa (builder) al directorio actual (/app) de la segunda etapa
 COPY --from=builder /app/main .
 
-# Expose port 8080 to the outside world
+# Exponer el puerto 8080 para el mundo exterior
 EXPOSE 8080
 
-# Command to run the executable
+# Comando para ejecutar el binario
 CMD ["./main"]

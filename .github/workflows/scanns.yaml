@@ -32,9 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Run Snyk sacan
-        uses: snyk/actions/go@master
-        with:
-          args: test
+      - name: Run Snyk scann
+        uses: snyk/actions/golang@master
         env: 
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

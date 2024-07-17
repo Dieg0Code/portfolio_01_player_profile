@@ -47,6 +47,74 @@ erDiagram
     PLAYERPROFILE ||--o{ ACHIEVEMENT : unlocks
 ```
 
+## Tecnologías
+
+- Golang 1.22.1
+- Gin Gonic
+- Gorm
+- PostgreSQL
+- Docker
+- Docker Compose
+- Makefile
+- GitHub Actions
+- Terraform
+- AWS
+- Swagger
+- SonarCloud
+- Synk
+
+La aplicación consta de una API con los respectivos endpoints para cada entidad, como base de datos se utiliza PostgreSQL y se utiliza Docker Compose para levantar la base de datos y la aplicación. Se despliega mediante un Pipeline de GitHub Actions a un entorno de AWS utilizando Terraform.
+
+
+## Diagrama de Clases
+
+```mermaid
+classDiagram
+    class User {
+        +int ID
+        +string Username
+        +string Password
+        +string Email
+        +int Age
+        +[]PlayerProfile Profiles
+        +CreateUser() error
+        +GetUser(id int) (User, error)
+        +UpdateUser() error
+        +DeleteUser() error
+    }
+
+    class PlayerProfile {
+        +int ID
+        +string Nickname
+        +string Avatar
+        +int Level
+        +int Experience
+        +int Points
+        +int UserID
+        +User User
+        +[]Achievement Achievements
+        +CreateProfile() error
+        +GetProfile(id int) (PlayerProfile, error)
+        +UpdateProfile() error
+        +DeleteProfile() error
+    }
+
+    class Achievement {
+        +int ID
+        +string Name
+        +string Description
+        +int PlayerProfileID
+        +PlayerProfile PlayerProfile
+        +CreateAchievement() error
+        +GetAchievement(id int) (Achievement, error)
+        +UpdateAchievement() error
+        +DeleteAchievement() error
+    }
+
+    User "1" --o "*" PlayerProfile : tiene
+    PlayerProfile "1" --o "*" Achievement : desbloquea
+```
+
 ## Endpoints
 
 ### User
@@ -102,25 +170,6 @@ sequenceDiagram
     Cliente->>Auth: POST /auth/logout
     Auth-->>Cliente: Sesión cerrada
 ```
-
-## Tecnologías
-
-- Golang 1.22.1
-- Gin Gonic
-- Gorm
-- PostgreSQL
-- Docker
-- Docker Compose
-- Makefile
-- GitHub Actions
-- Terraform
-- AWS
-- Swagger
-- SonarCloud
-- Synk
-
-La aplicación consta de una API con los respectivos endpoints para cada entidad, como base de datos se utiliza PostgreSQL y se utiliza Docker Compose para levantar la base de datos y la aplicación. Se despliega mediante un Pipeline de GitHub Actions a un entorno de AWS utilizando Terraform.
-
 ## Infraestructura de AWS
 
 - **VPC**: Para la configuración de la red virtual privada interna de la aplicación.

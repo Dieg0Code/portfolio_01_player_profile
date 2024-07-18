@@ -45,11 +45,6 @@ func (u *UserRepositoryImpl) GetUser(userID int) (*models.User, error) {
 	// Explicitly specify the field name in the query.
 	result := u.Db.Where("user_id = ?", userID).First(&userFound)
 
-	// Check for a "record not found" error.
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		return nil, helpers.ErrorUserNotFound
-	}
-
 	// Check for other types of errors.
 	if result.Error != nil {
 		return nil, result.Error
@@ -61,7 +56,6 @@ func (u *UserRepositoryImpl) GetUser(userID int) (*models.User, error) {
 
 // UpdateUser implements repository.UserRepository.
 func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
-	// Optimización: Verificar existencia sin cargar el usuario completo.
 	exists, err := u.CheckUserExists(user.UserID)
 	if err != nil {
 		return err
@@ -87,7 +81,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID int) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Delete(&models.User{}, userID)
+	result := u.Db.Where("user_id = ?", userID).Delete(&models.User{})
 	if result.Error != nil {
 		return helpers.ErrorDeleteUser
 	}
@@ -97,9 +91,17 @@ func (u *UserRepositoryImpl) DeleteUser(userID int) error {
 // CheckUserExists verifica si existe un usuario con el ID proporcionado.
 func (u *UserRepositoryImpl) CheckUserExists(userID int) (bool, error) {
 	var exists int64
+
 	result := u.Db.Model(&models.User{}).Where("user_id = ?", userID).Count(&exists)
+
+	// Check for a "record not found" error.
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return false, helpers.ErrorUserNotFound
+	}
+	// Other Kind of error
 	if result.Error != nil {
 		return false, result.Error
 	}
+
 	return exists > 0, nil
 }

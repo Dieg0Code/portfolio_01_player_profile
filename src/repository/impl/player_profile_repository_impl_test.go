@@ -3,6 +3,7 @@ package impl
 import (
 	"testing"
 
+	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
 	"github.com/dieg0code/player-profile/src/testutils"
 	"github.com/stretchr/testify/require"
@@ -49,17 +50,21 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
-		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		resultUser := userRepo.CreateUser(testUser)
+		resultPlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
 
+		// Attempt to create user profile
+		require.NoError(t, resultUser, "Error creating user")
+		require.Nil(t, resultUser, "Error creating user")
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
-
+		require.NoError(t, resultPlayer, "Error creating player profile")
+		require.Nil(t, resultPlayer, "Error creating player profile")
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+
 		var dbPlayer models.PlayerProfile
 		require.NoError(t, db.Preload("User").First(&dbPlayer, "nickname = ?", testPlayerProfile.Nickname).Error, "Error getting player profile")
 
@@ -78,14 +83,18 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
-		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		resultUser := userRepo.CreateUser(testUser)
+		resultPlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
 
+		// Attempt to create user profile
+		require.NoError(t, resultUser, "Error creating user")
+		require.Nil(t, resultUser, "Error creating user")
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
+		require.NoError(t, resultPlayer, "Error creating player profile")
+		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
@@ -94,26 +103,6 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		err := playerRepo.CreatePlayerProfile(testPlayerProfile)
 		require.Error(t, err, "Expected error creating duplicate player profile")
 	})
-
-	// t.Run("CreatePlayerProfile_Error", func(t *testing.T) {
-	// 	db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
-	// 	defer func() {
-	// 		sqlDB, _ := db.DB()
-	// 		sqlDB.Close()
-	// 	}()
-
-	// 	playerRepo := NewPlayerProfileRepositoryImpl(db)
-
-	// 	// Attempt to create Player with invalid data
-	// 	// Attempt to create Player with invalid data
-	// 	invalidProfile := &models.PlayerProfile{
-	// 		Nickname: "",
-	// 	}
-
-	// 	err := playerRepo.CreatePlayerProfile(invalidProfile)
-	// 	require.Error(t, err, "Expected error creating player profile with invalid data")
-	// })
-
 }
 
 func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
@@ -128,14 +117,19 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
+		resultUser := userRepo.CreateUser(testUser)
+		resultPlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
+
 		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		require.NoError(t, resultUser, "Error creating user")
+		require.Nil(t, resultUser, "Error creating user")
 
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
+		require.NoError(t, resultPlayer, "Error creating player profile")
+		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
@@ -160,20 +154,7 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 		// Attempt to get player profile
 		_, err := playerRepo.GetPlayerProfile(1)
 		require.Error(t, err, "Expected error getting player profile")
-	})
-
-	t.Run("GetPlayerProfile_Error", func(t *testing.T) {
-		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
-		defer func() {
-			sqlDB, _ := db.DB()
-			sqlDB.Close()
-		}()
-
-		playerRepo := NewPlayerProfileRepositoryImpl(db)
-
-		// Attempt to get player profile with invalid data
-		_, err := playerRepo.GetPlayerProfile(99999)
-		require.Error(t, err, "Expected error getting player profile with invalid data")
+		require.EqualError(t, err, helpers.ErrorPlayerProfileNotFound.Error(), "Error messages do not match")
 	})
 
 }
@@ -190,21 +171,27 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
+		resultUser := userRepo.CreateUser(testUser)
+		resultPlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
+
 		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		require.NoError(t, resultUser, "Error creating user")
+		require.Nil(t, resultUser, "Error creating user")
 
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
+		require.NoError(t, resultPlayer, "Error creating player profile")
+		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
 
 		// Update Player
 		testPlayerProfile.Nickname = "newNickname"
-		require.NoError(t, playerRepo.UpdatePlayerProfile(testPlayerProfile), "Error updating player profile")
+		resultUpdatePlayer := playerRepo.UpdatePlayerProfile(testPlayerProfile)
+		require.NoError(t, resultUpdatePlayer, "Error updating player profile")
 
 		// Get Player
 		dbPlayer, err := playerRepo.GetPlayerProfile(testPlayerProfile.PlayerProfileID)
@@ -226,25 +213,7 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		// Attempt to update player profile
 		err := playerRepo.UpdatePlayerProfile(testPlayerProfile)
 		require.Error(t, err, "Expected error updating player profile")
-	})
-
-	t.Run("UpdatePlayerProfile_Error", func(t *testing.T) {
-		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
-		defer func() {
-			sqlDB, _ := db.DB()
-			sqlDB.Close()
-		}()
-
-		playerRepo := NewPlayerProfileRepositoryImpl(db)
-
-		// Attempt to update player profile with invalid data
-		invalidPlayer := &models.PlayerProfile{
-			PlayerProfileID: 1,
-			Nickname:        "",
-		}
-
-		err := playerRepo.UpdatePlayerProfile(invalidPlayer)
-		require.Error(t, err, "Expected error updating player profile with invalid data")
+		require.EqualError(t, err, helpers.ErrorPlayerProfileNotFound.Error(), "Error messages do not match")
 	})
 
 }
@@ -261,20 +230,27 @@ func TestPlayerProfileRespositoryImpl_DeletePlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
+		resultCreateUser := userRepo.CreateUser(testUser)
+		resultCreatePlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
+
 		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		require.NoError(t, resultCreateUser, "Error creating user")
+		require.Nil(t, resultCreateUser, "Error creating user")
 
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
+		require.NoError(t, resultCreatePlayer, "Error creating player profile")
+		require.Nil(t, resultCreatePlayer, "Error creating player profile")
 
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
 
+		resultDeletePlayer := playerRepo.DeletePlayerProfile(testPlayerProfile.PlayerProfileID)
+
 		// Attempt to delete player profile
-		require.NoError(t, playerRepo.DeletePlayerProfile(testPlayerProfile.PlayerProfileID), "Error deleting player profile")
+		require.NoError(t, resultDeletePlayer, "Error deleting player profile")
 
 		// Attempt to get player profile
 		_, err := playerRepo.GetPlayerProfile(testPlayerProfile.PlayerProfileID)
@@ -293,20 +269,7 @@ func TestPlayerProfileRespositoryImpl_DeletePlayerProfile(t *testing.T) {
 		// Attempt to delete player profile
 		err := playerRepo.DeletePlayerProfile(1)
 		require.Error(t, err, "Expected error deleting player profile")
-	})
-
-	t.Run("DeletePlayerProfile_Error", func(t *testing.T) {
-		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
-		defer func() {
-			sqlDB, _ := db.DB()
-			sqlDB.Close()
-		}()
-
-		playerRepo := NewPlayerProfileRepositoryImpl(db)
-
-		// Attempt to delete player profile with invalid data
-		err := playerRepo.DeletePlayerProfile(999999)
-		require.Error(t, err, "Expected error deleting player profile with invalid data")
+		require.EqualError(t, err, helpers.ErrorPlayerProfileNotFound.Error(), "Error messages do not match")
 	})
 
 }
@@ -322,14 +285,19 @@ func TestPlayerProfileRespositoryImpl_CheckPlayerProfileExists(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 		userRepo := NewUserRepositoryImpl(db)
 
+		resultCreateUser := userRepo.CreateUser(testUser)
+		resultCreatePlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
+
 		// Attempt to create user profile
-		require.NoError(t, userRepo.CreateUser(testUser), "Error creating user")
+		require.NoError(t, resultCreateUser, "Error creating user")
+		require.Nil(t, resultCreateUser, "Error creating user")
 
 		// Verify user was created
 		require.NotZero(t, testUser.UserID, "User ID is zero")
 
 		// Attempt to create Player
-		require.NoError(t, playerRepo.CreatePlayerProfile(testPlayerProfile), "Error creating player profile")
+		require.NoError(t, resultCreatePlayer, "Error creating player profile")
+		require.Nil(t, resultCreatePlayer, "Error creating player profile")
 
 		// Varify Player was created
 		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
@@ -353,20 +321,5 @@ func TestPlayerProfileRespositoryImpl_CheckPlayerProfileExists(t *testing.T) {
 		exists, err := playerRepo.CheckPlayerProfileExists(1)
 		require.NoError(t, err, "Error checking if player exists")
 		require.False(t, exists, "Player exists")
-	})
-
-	t.Run("CheckPlayerProfileExists_Error", func(t *testing.T) {
-		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
-		defer func() {
-			sqlDB, _ := db.DB()
-			sqlDB.Close()
-		}()
-
-		playerRepo := NewPlayerProfileRepositoryImpl(db)
-
-		// Check if Player exists with invalid data
-		exists, err := playerRepo.CheckPlayerProfileExists(9999)
-		require.NoError(t, err, "No error expected for non-existent player profile check")
-		require.False(t, exists, "Expected non-existent player profile")
 	})
 }

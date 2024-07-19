@@ -5,7 +5,7 @@ import (
 
 	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
-	"github.com/dieg0code/player-profile/src/repository"
+	r "github.com/dieg0code/player-profile/src/repository"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +13,7 @@ type PlayerProfileRepositoryImpl struct {
 	Db *gorm.DB
 }
 
-func NewPlayerProfileRepositoryImpl(db *gorm.DB) repository.PlayerProfileRepository {
+func NewPlayerProfileRepositoryImpl(db *gorm.DB) r.PlayerProfileRepository {
 	return &PlayerProfileRepositoryImpl{Db: db}
 }
 
@@ -40,7 +40,7 @@ func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID int) (*mo
 
 	var playerProfileFound models.PlayerProfile
 
-	result := p.Db.Where("player_profile_id = ?", playerProfileID).First(&playerProfileFound)
+	result := p.Db.Where(r.PlayerProfileIDPlaceHolder, playerProfileID).First(&playerProfileFound)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -60,7 +60,7 @@ func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.
 		return helpers.ErrorPlayerProfileNotFound
 	}
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where("player_profile_id = ?", playerProfile.PlayerProfileID).Updates(playerProfile)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfile.PlayerProfileID).Updates(playerProfile)
 	if result.Error != nil {
 		return helpers.ErrorUpdatePlayer
 	}
@@ -93,7 +93,7 @@ func (p *PlayerProfileRepositoryImpl) DeletePlayerProfile(playerProfileID int) e
 func (p *PlayerProfileRepositoryImpl) CheckPlayerProfileExists(playerProfileID int) (bool, error) {
 	var exists int64
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where("player_profile_id = ?", playerProfileID).Count(&exists)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfileID).Count(&exists)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return false, helpers.ErrorPlayerProfileNotFound

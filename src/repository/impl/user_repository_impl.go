@@ -5,7 +5,7 @@ import (
 
 	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
-	repo "github.com/dieg0code/player-profile/src/repository"
+	r "github.com/dieg0code/player-profile/src/repository"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +13,7 @@ type UserRepositoryImpl struct {
 	Db *gorm.DB
 }
 
-func NewUserRepositoryImpl(db *gorm.DB) repo.UserRepository {
+func NewUserRepositoryImpl(db *gorm.DB) r.UserRepository {
 	return &UserRepositoryImpl{Db: db}
 }
 
@@ -43,7 +43,7 @@ func (u *UserRepositoryImpl) GetUser(userID int) (*models.User, error) {
 	var userFound models.User
 
 	// Explicitly specify the field name in the query.
-	result := u.Db.Where("user_id = ?", userID).First(&userFound)
+	result := u.Db.Where(r.UserIDPlaceHolder, userID).First(&userFound)
 
 	// Check for other types of errors.
 	if result.Error != nil {
@@ -65,7 +65,7 @@ func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Model(&models.User{}).Where("user_id = ?", user.UserID).Updates(user)
+	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, user.UserID).Updates(user)
 	if result.Error != nil {
 		return helpers.ErrorUpdateUser
 	}
@@ -81,7 +81,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID int) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Where("user_id = ?", userID).Delete(&models.User{})
+	result := u.Db.Where(r.UserIDPlaceHolder, userID).Delete(&models.User{})
 	if result.Error != nil {
 		return helpers.ErrorDeleteUser
 	}
@@ -92,7 +92,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID int) error {
 func (u *UserRepositoryImpl) CheckUserExists(userID int) (bool, error) {
 	var exists int64
 
-	result := u.Db.Model(&models.User{}).Where("user_id = ?", userID).Count(&exists)
+	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, userID).Count(&exists)
 
 	// Check for a "record not found" error.
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {

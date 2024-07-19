@@ -12,10 +12,10 @@
 - [x] Create PlayerProfile Model
 - [x] Create Achievement Model
 - [x] Create User Repository
-- [ ] Create PlayerProfile Repository
+- [x] Create PlayerProfile Repository
 - [ ] Create Achievement Repository
 - [x] Create Tests for User Repository
-- [ ] Create Tests for PlayerProfile Repository
+- [x] Create Tests for PlayerProfile Repository
 - [ ] Create Tests for Achievement Repository
 - [ ] Create User Service
 - [ ] Create Tests for User Service

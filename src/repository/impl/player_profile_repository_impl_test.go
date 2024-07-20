@@ -31,7 +31,10 @@ func TestNewPlayerProfileRepositoryImpl(t *testing.T) {
 	db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 	defer func() {
 		sqlDB, _ := db.DB()
-		sqlDB.Close()
+		err := sqlDB.Close()
+		if err != nil {
+			t.Errorf("Error closing database connection: %v", err)
+		}
 	}()
 
 	playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -44,7 +47,10 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -77,7 +83,10 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -111,7 +120,10 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -146,7 +158,10 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -165,7 +180,10 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -205,7 +223,10 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -224,7 +245,10 @@ func TestPlayerProfileRespositoryImpl_DeletePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -261,7 +285,10 @@ func TestPlayerProfileRespositoryImpl_DeletePlayerProfile(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -279,7 +306,10 @@ func TestPlayerProfileRespositoryImpl_CheckPlayerProfileExists(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
@@ -312,7 +342,10 @@ func TestPlayerProfileRespositoryImpl_CheckPlayerProfileExists(t *testing.T) {
 		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		playerRepo := NewPlayerProfileRepositoryImpl(db)

@@ -10,8 +10,6 @@ linters:
     - misspell
     - gofmt
   disable:
-    - deadcode  # Deprecated
-    - golint    # Deprecated
 
 linters-settings:
   errcheck:
@@ -24,3 +22,5 @@ issues:
 
 run:
   timeout: 5m
+  output:
+    format: colored-line-number

@@ -14,7 +14,10 @@ func TestUserRepositoryImpl_CreateUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		// Create repository instance
@@ -44,7 +47,10 @@ func TestUserRepositoryImpl_CreateUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		repo := NewUserRepositoryImpl(db)
@@ -72,7 +78,10 @@ func TestUserRepositoryImpl_GetUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		// Create repository instance
@@ -106,7 +115,10 @@ func TestUserRepositoryImpl_GetUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		repo := NewUserRepositoryImpl(db)
@@ -124,7 +136,10 @@ func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		// Create repository instance
@@ -161,7 +176,10 @@ func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		repo := NewUserRepositoryImpl(db)
@@ -189,7 +207,10 @@ func TestUserRepositoryImpl_DeleteUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		// Create repository instance
@@ -226,7 +247,10 @@ func TestUserRepositoryImpl_DeleteUser(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
 		defer func() {
 			sqlDB, _ := db.DB()
-			sqlDB.Close()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
 		}()
 
 		repo := NewUserRepositoryImpl(db)

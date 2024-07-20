@@ -9,18 +9,15 @@ linters:
     - unused
     - misspell
     - gofmt
+    - shadow
   disable:
 
 linters-settings:
   errcheck:
     check-type-assertions: true
-  govet:
-    check-shadowing: true
 
 issues:
   exclude-use-default: false
 
 run:
   timeout: 5m
-  output:
-    format: colored-line-number

@@ -14,11 +14,14 @@ type TestModel struct {
 }
 
 func TestSetupTestDB(t *testing.T) {
-	// Intialize test database.
+	// Initialize test database.
 	db := SetupTestDB(&TestModel{})
 	defer func() {
 		sqlDB, _ := db.DB()
-		sqlDB.Close()
+		err := sqlDB.Close()
+		if err != nil {
+			t.Errorf("Error closing database connection: %v", err)
+		}
 	}()
 
 	// Try to create a record and verify if it was created.

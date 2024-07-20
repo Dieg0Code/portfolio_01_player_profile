@@ -1,0 +1,26 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - misspell
+    - gofmt
+  disable:
+    - deadcode  # Deprecated
+    - golint    # Deprecated
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  govet:
+    check-shadowing: true
+
+issues:
+  exclude-use-default: false
+
+run:
+  timeout: 5m

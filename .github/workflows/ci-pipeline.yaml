@@ -14,7 +14,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necesario para el análisis de SonarCloud
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -34,7 +34,7 @@ jobs:
 
       # Cacheo de golangci-lint
       - name: Cache golangci-lint
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.golangci-lint
           key: ${{ runner.os }}-golangci-lint-${{ hashFiles('.golangci.yml') }}
@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # Cacheo de Snyk
+      # Cacheo de Snyk CLI
       - name: Cache Snyk CLI
         uses: actions/cache@v4
         with:
@@ -74,13 +74,3 @@ jobs:
         with:
           command: test
           args: --all-projects
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: coverage/
-
-      - name: Display structure of uploaded files
-        run: ls -R
-        working-directory: coverage/

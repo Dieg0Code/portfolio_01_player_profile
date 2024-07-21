@@ -7,12 +7,12 @@ import (
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserServiceImpl struct {
 	UserRepository repository.UserRepository
 	Validate       *validator.Validate
+	PasswordHasher services.PasswordHasher
 }
 
 // Create implements services.UserService.
@@ -23,7 +23,7 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 		return err
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	hashedPassword, err := u.PasswordHasher.HashPassword(user.Password)
 	if err != nil {
 		return err
 	}
@@ -102,9 +102,10 @@ func (u *UserServiceImpl) Update(userID uint, user request.UpdateUserRequest) er
 	return nil
 }
 
-func NewUserServiceImpl(userRepository repository.UserRepository, validate *validator.Validate) services.UserService {
+func NewUserServiceImpl(userRepository repository.UserRepository, validate *validator.Validate, passwordHasher services.PasswordHasher) services.UserService {
 	return &UserServiceImpl{
 		UserRepository: userRepository,
 		Validate:       validate,
+		PasswordHasher: passwordHasher,
 	}
 }

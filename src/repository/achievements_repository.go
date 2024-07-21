@@ -7,4 +7,5 @@ type AchievementRepository interface {
 	GetAchievement(achievementID int) (*models.Achievement, error)
 	UpdateAchievement(achievement *models.Achievement) error
 	DeleteAchievement(achievementID int) error
+	CheckAchievementExists(achievementID int) (bool, error)
 }

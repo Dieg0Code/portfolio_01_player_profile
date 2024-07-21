@@ -1,7 +1,10 @@
 package repository
 
 // User
-const UserIDPlaceHolder string = "user_id = ?"
+const UserIDPlaceHolder string = "id = ?"
 
 // Player Profile
-const PlayerProfileIDPlaceHolder string = "player_profile_id = ?"
+const PlayerProfileIDPlaceHolder string = "id = ?"
+
+// Achievement
+const AchievementIDPlaceHolder string = "id = ?"

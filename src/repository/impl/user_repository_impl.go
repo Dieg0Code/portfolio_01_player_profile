@@ -20,6 +20,11 @@ func NewUserRepositoryImpl(db *gorm.DB) r.UserRepository {
 // CreateUser implements repository.UserRepository.
 func (u *UserRepositoryImpl) CreateUser(user *models.User) error {
 
+	err := user.Validate()
+	if err != nil {
+		return err
+	}
+
 	result := u.Db.Create(user)
 	if result.Error != nil {
 		return result.Error
@@ -29,7 +34,7 @@ func (u *UserRepositoryImpl) CreateUser(user *models.User) error {
 }
 
 // GetUser implements repository.UserRepository.
-func (u *UserRepositoryImpl) GetUser(userID int) (*models.User, error) {
+func (u *UserRepositoryImpl) GetUser(userID uint) (*models.User, error) {
 
 	exists, err := u.CheckUserExists(userID)
 	if err != nil {
@@ -56,7 +61,7 @@ func (u *UserRepositoryImpl) GetUser(userID int) (*models.User, error) {
 
 // UpdateUser implements repository.UserRepository.
 func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
-	exists, err := u.CheckUserExists(user.UserID)
+	exists, err := u.CheckUserExists(user.ID)
 	if err != nil {
 		return err
 	}
@@ -65,14 +70,14 @@ func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, user.UserID).Updates(user)
+	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, user.ID).Updates(user)
 	if result.Error != nil {
 		return helpers.ErrorUpdateUser
 	}
 	return nil
 }
 
-func (u *UserRepositoryImpl) DeleteUser(userID int) error {
+func (u *UserRepositoryImpl) DeleteUser(userID uint) error {
 	exists, err := u.CheckUserExists(userID)
 	if err != nil {
 		return err
@@ -89,7 +94,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID int) error {
 }
 
 // CheckUserExists verifica si existe un usuario con el ID proporcionado.
-func (u *UserRepositoryImpl) CheckUserExists(userID int) (bool, error) {
+func (u *UserRepositoryImpl) CheckUserExists(userID uint) (bool, error) {
 	var exists int64
 
 	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, userID).Count(&exists)

@@ -11,3 +11,8 @@ var ErrorDeleteUser = errors.New("error deleting user")
 var ErrorPlayerProfileNotFound = errors.New("player profile not found")
 var ErrorUpdatePlayer = errors.New("error updating player")
 var ErrorDeletingUser = errors.New("error deleting user")
+
+// Achievement errors.
+var ErrorAchievementNotFound = errors.New("achievement not found")
+var ErrorUpdateAchievement = errors.New("error updating achievement")
+var ErrorDeletingAchievement = errors.New("error deleting achievement")

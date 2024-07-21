@@ -23,7 +23,7 @@ var (
 		Level:      1,
 		Experience: 10,
 		Points:     100,
-		UserID:     testUser.UserID,
+		UserID:     testUser.ID,
 	}
 )
 
@@ -63,13 +63,13 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		require.NoError(t, resultUser, "Error creating user")
 		require.Nil(t, resultUser, "Error creating user")
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultPlayer, "Error creating player profile")
 		require.Nil(t, resultPlayer, "Error creating player profile")
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
 		var dbPlayer models.PlayerProfile
 		require.NoError(t, db.Preload("User").First(&dbPlayer, "nickname = ?", testPlayerProfile.Nickname).Error, "Error getting player profile")
@@ -99,14 +99,14 @@ func TestPlayerProfileRespositoryImpl_CreatePlayerProfile(t *testing.T) {
 		require.NoError(t, resultUser, "Error creating user")
 		require.Nil(t, resultUser, "Error creating user")
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultPlayer, "Error creating player profile")
 		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
 		// Attempt to create Player again
 		err := playerRepo.CreatePlayerProfile(testPlayerProfile)
@@ -137,17 +137,17 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 		require.Nil(t, resultUser, "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultPlayer, "Error creating player profile")
 		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
 		// Attempt to get player profile
-		dbPlayer, err := playerRepo.GetPlayerProfile(testPlayerProfile.PlayerProfileID)
+		dbPlayer, err := playerRepo.GetPlayerProfile(testPlayerProfile.ID)
 		require.NoError(t, err, "Error getting player profile")
 
 		// Assertion
@@ -197,14 +197,14 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		require.Nil(t, resultUser, "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultPlayer, "Error creating player profile")
 		require.Nil(t, resultPlayer, "Error creating player profile")
 
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
 		// Update Player
 		testPlayerProfile.Nickname = "newNickname"
@@ -212,7 +212,7 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		require.NoError(t, resultUpdatePlayer, "Error updating player profile")
 
 		// Get Player
-		dbPlayer, err := playerRepo.GetPlayerProfile(testPlayerProfile.PlayerProfileID)
+		dbPlayer, err := playerRepo.GetPlayerProfile(testPlayerProfile.ID)
 		require.NoError(t, err, "Error getting player profile")
 
 		// Assertion
@@ -262,22 +262,22 @@ func TestPlayerProfileRespositoryImpl_DeletePlayerProfile(t *testing.T) {
 		require.Nil(t, resultCreateUser, "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultCreatePlayer, "Error creating player profile")
 		require.Nil(t, resultCreatePlayer, "Error creating player profile")
 
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
-		resultDeletePlayer := playerRepo.DeletePlayerProfile(testPlayerProfile.PlayerProfileID)
+		resultDeletePlayer := playerRepo.DeletePlayerProfile(testPlayerProfile.ID)
 
 		// Attempt to delete player profile
 		require.NoError(t, resultDeletePlayer, "Error deleting player profile")
 
 		// Attempt to get player profile
-		_, err := playerRepo.GetPlayerProfile(testPlayerProfile.PlayerProfileID)
+		_, err := playerRepo.GetPlayerProfile(testPlayerProfile.ID)
 		require.Error(t, err, "Expected error getting player profile")
 	})
 
@@ -323,17 +323,17 @@ func TestPlayerProfileRespositoryImpl_CheckPlayerProfileExists(t *testing.T) {
 		require.Nil(t, resultCreateUser, "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, testUser.UserID, "User ID is zero")
+		require.NotZero(t, testUser.ID, "User ID is zero")
 
 		// Attempt to create Player
 		require.NoError(t, resultCreatePlayer, "Error creating player profile")
 		require.Nil(t, resultCreatePlayer, "Error creating player profile")
 
 		// Varify Player was created
-		require.NotZero(t, testPlayerProfile.PlayerProfileID, "Player Profile ID is zero")
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
 
 		// Check if Player exists
-		exists, err := playerRepo.CheckPlayerProfileExists(testPlayerProfile.PlayerProfileID)
+		exists, err := playerRepo.CheckPlayerProfileExists(testPlayerProfile.ID)
 		require.NoError(t, err, "Error checking if player exists")
 		require.True(t, exists, "Player does not exist")
 	})

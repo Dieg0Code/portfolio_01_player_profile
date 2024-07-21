@@ -19,6 +19,7 @@ func NewPlayerProfileRepositoryImpl(db *gorm.DB) r.PlayerProfileRepository {
 
 // CreatePlayerProfile implements repository.PlayerProfileRepository.
 func (p *PlayerProfileRepositoryImpl) CreatePlayerProfile(playerProfile *models.PlayerProfile) error {
+
 	result := p.Db.Create(playerProfile)
 	if result.Error != nil {
 		return result.Error
@@ -28,7 +29,7 @@ func (p *PlayerProfileRepositoryImpl) CreatePlayerProfile(playerProfile *models.
 }
 
 // GetPlayerProfile implements repository.PlayerProfileRepository.
-func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID int) (*models.PlayerProfile, error) {
+func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID uint) (*models.PlayerProfile, error) {
 	exists, err := p.CheckPlayerProfileExists(playerProfileID)
 	if err != nil {
 		return nil, err
@@ -51,7 +52,7 @@ func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID int) (*mo
 
 // UpdatePlayerProfile implements repository.PlayerProfileRepository.
 func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.PlayerProfile) error {
-	exists, err := p.CheckPlayerProfileExists(playerProfile.PlayerProfileID)
+	exists, err := p.CheckPlayerProfileExists(playerProfile.ID)
 	if err != nil {
 		return err
 	}
@@ -60,7 +61,7 @@ func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.
 		return helpers.ErrorPlayerProfileNotFound
 	}
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfile.PlayerProfileID).Updates(playerProfile)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfile.ID).Updates(playerProfile)
 	if result.Error != nil {
 		return helpers.ErrorUpdatePlayer
 	}
@@ -69,7 +70,7 @@ func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.
 }
 
 // DeletePlayerProfile implements repository.PlayerProfileRepository.
-func (p *PlayerProfileRepositoryImpl) DeletePlayerProfile(playerProfileID int) error {
+func (p *PlayerProfileRepositoryImpl) DeletePlayerProfile(playerProfileID uint) error {
 	exists, err := p.CheckPlayerProfileExists(playerProfileID)
 
 	if err != nil {
@@ -90,7 +91,7 @@ func (p *PlayerProfileRepositoryImpl) DeletePlayerProfile(playerProfileID int) e
 }
 
 // Check if Player Profile exists.
-func (p *PlayerProfileRepositoryImpl) CheckPlayerProfileExists(playerProfileID int) (bool, error) {
+func (p *PlayerProfileRepositoryImpl) CheckPlayerProfileExists(playerProfileID uint) (bool, error) {
 	var exists int64
 
 	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfileID).Count(&exists)

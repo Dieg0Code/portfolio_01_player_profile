@@ -100,10 +100,10 @@ func TestUserRepositoryImpl_GetUser(t *testing.T) {
 		require.NoError(t, repo.CreateUser(user), "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, user.UserID, "User ID is zero")
+		require.NotZero(t, user.ID, "User ID is zero")
 
 		// Attempt to get user
-		dbUser, err := repo.GetUser(user.UserID)
+		dbUser, err := repo.GetUser(user.ID)
 		require.NoError(t, err, "Error getting user")
 
 		// Assertions
@@ -186,7 +186,6 @@ func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 
 		// Create a new user instance with a non-existent ID
 		nonExistentUser := &models.User{
-			UserID:   9999, // Assume 9999 is a non-existent ID
 			UserName: "nonexistent",
 			PassWord: "test",
 			Email:    "test@test.com",
@@ -229,10 +228,10 @@ func TestUserRepositoryImpl_DeleteUser(t *testing.T) {
 		require.NoError(t, repo.CreateUser(user), "Error creating user")
 
 		// Verify user was created
-		require.NotZero(t, user.UserID, "User ID is zero")
+		require.NotZero(t, user.ID, "User ID is zero")
 
 		// Attempt to delete user
-		require.NoError(t, repo.DeleteUser(user.UserID), "Error deleting user")
+		require.NoError(t, repo.DeleteUser(user.ID), "Error deleting user")
 
 		// Verify user was deleted
 		var dbUser models.User

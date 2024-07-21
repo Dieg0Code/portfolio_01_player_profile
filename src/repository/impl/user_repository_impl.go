@@ -20,11 +20,6 @@ func NewUserRepositoryImpl(db *gorm.DB) r.UserRepository {
 // CreateUser implements repository.UserRepository.
 func (u *UserRepositoryImpl) CreateUser(user *models.User) error {
 
-	err := user.Validate()
-	if err != nil {
-		return err
-	}
-
 	result := u.Db.Create(user)
 	if result.Error != nil {
 		return result.Error
@@ -48,7 +43,7 @@ func (u *UserRepositoryImpl) GetUser(userID uint) (*models.User, error) {
 	var userFound models.User
 
 	// Explicitly specify the field name in the query.
-	result := u.Db.Where(r.UserIDPlaceHolder, userID).First(&userFound)
+	result := u.Db.Where(IDPlaceHolder, userID).First(&userFound)
 
 	// Check for other types of errors.
 	if result.Error != nil {
@@ -70,7 +65,7 @@ func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, user.ID).Updates(user)
+	result := u.Db.Model(&models.User{}).Where(IDPlaceHolder, user.ID).Updates(user)
 	if result.Error != nil {
 		return helpers.ErrorUpdateUser
 	}
@@ -86,7 +81,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID uint) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Where(r.UserIDPlaceHolder, userID).Delete(&models.User{})
+	result := u.Db.Where(IDPlaceHolder, userID).Delete(&models.User{})
 	if result.Error != nil {
 		return helpers.ErrorDeleteUser
 	}
@@ -97,7 +92,7 @@ func (u *UserRepositoryImpl) DeleteUser(userID uint) error {
 func (u *UserRepositoryImpl) CheckUserExists(userID uint) (bool, error) {
 	var exists int64
 
-	result := u.Db.Model(&models.User{}).Where(r.UserIDPlaceHolder, userID).Count(&exists)
+	result := u.Db.Model(&models.User{}).Where(IDPlaceHolder, userID).Count(&exists)
 
 	// Check for a "record not found" error.
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {

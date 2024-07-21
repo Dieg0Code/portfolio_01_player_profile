@@ -41,7 +41,7 @@ func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID uint) (*m
 
 	var playerProfileFound models.PlayerProfile
 
-	result := p.Db.Where(r.PlayerProfileIDPlaceHolder, playerProfileID).First(&playerProfileFound)
+	result := p.Db.Where(IDPlaceHolder, playerProfileID).First(&playerProfileFound)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -61,7 +61,7 @@ func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.
 		return helpers.ErrorPlayerProfileNotFound
 	}
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfile.ID).Updates(playerProfile)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(IDPlaceHolder, playerProfile.ID).Updates(playerProfile)
 	if result.Error != nil {
 		return helpers.ErrorUpdatePlayer
 	}
@@ -94,7 +94,7 @@ func (p *PlayerProfileRepositoryImpl) DeletePlayerProfile(playerProfileID uint) 
 func (p *PlayerProfileRepositoryImpl) CheckPlayerProfileExists(playerProfileID uint) (bool, error) {
 	var exists int64
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where(r.PlayerProfileIDPlaceHolder, playerProfileID).Count(&exists)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(IDPlaceHolder, playerProfileID).Count(&exists)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return false, helpers.ErrorPlayerProfileNotFound

@@ -29,7 +29,7 @@ func (a *AchivementRepositoryImpl) CreateAchievement(achievement *models.Achieve
 }
 
 // GetAchievement implements repository.AchievementRepository.
-func (a *AchivementRepositoryImpl) GetAchievement(achievementID int) (*models.Achievement, error) {
+func (a *AchivementRepositoryImpl) GetAchievement(achievementID uint) (*models.Achievement, error) {
 	exists, err := a.CheckAchievementExists(achievementID)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (a *AchivementRepositoryImpl) GetAchievement(achievementID int) (*models.Ac
 
 	var achievementFound models.Achievement
 
-	result := a.Db.Where(r.AchievementIDPlaceHolder, achievementID).First(&achievementFound)
+	result := a.Db.Where(IDPlaceHolder, achievementID).First(&achievementFound)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -52,7 +52,7 @@ func (a *AchivementRepositoryImpl) GetAchievement(achievementID int) (*models.Ac
 
 // UpdateAchievement implements repository.AchievementRepository.
 func (a *AchivementRepositoryImpl) UpdateAchievement(achievement *models.Achievement) error {
-	exists, err := a.CheckAchievementExists(int(achievement.ID))
+	exists, err := a.CheckAchievementExists(achievement.ID)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (a *AchivementRepositoryImpl) UpdateAchievement(achievement *models.Achieve
 		return h.ErrorAchievementNotFound
 	}
 
-	result := a.Db.Model(&models.Achievement{}).Where(r.AchievementIDPlaceHolder, achievement.ID).Updates(achievement)
+	result := a.Db.Model(&models.Achievement{}).Where(IDPlaceHolder, achievement.ID).Updates(achievement)
 	if result.Error != nil {
 		return h.ErrorUpdateAchievement
 	}
@@ -70,7 +70,7 @@ func (a *AchivementRepositoryImpl) UpdateAchievement(achievement *models.Achieve
 }
 
 // DeleteAchievement implements repository.AchievementRepository.
-func (a *AchivementRepositoryImpl) DeleteAchievement(achievementID int) error {
+func (a *AchivementRepositoryImpl) DeleteAchievement(achievementID uint) error {
 	exists, err := a.CheckAchievementExists(achievementID)
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func (a *AchivementRepositoryImpl) DeleteAchievement(achievementID int) error {
 		return h.ErrorAchievementNotFound
 	}
 
-	result := a.Db.Delete(&models.Achievement{}, r.AchievementIDPlaceHolder, achievementID)
+	result := a.Db.Delete(&models.Achievement{}, IDPlaceHolder, achievementID)
 	if result.Error != nil {
 		return h.ErrorDeletingAchievement
 	}
@@ -89,10 +89,10 @@ func (a *AchivementRepositoryImpl) DeleteAchievement(achievementID int) error {
 }
 
 // CheackAchievementExists implements repository.AchievementRepository.
-func (a *AchivementRepositoryImpl) CheckAchievementExists(achievementID int) (bool, error) {
+func (a *AchivementRepositoryImpl) CheckAchievementExists(achievementID uint) (bool, error) {
 	var exists int64
 
-	result := a.Db.Model(&models.Achievement{}).Where(r.AchievementIDPlaceHolder, achievementID).Count(&exists)
+	result := a.Db.Model(&models.Achievement{}).Where(IDPlaceHolder, achievementID).Count(&exists)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return false, h.ErrorAchievementNotFound

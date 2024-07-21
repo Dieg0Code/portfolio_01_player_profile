@@ -9,8 +9,8 @@ type Achievement struct {
 	gorm.Model
 	Name            string        `gorm:"type:varchar(255);not null" validate:"required"`
 	Description     string        `gorm:"type:varchar(255);not null" validate:"required"`
-	PlayerProfileID uint          `gorm:"type:int;not null" validate:"required"` // Clave foránea
-	PlayerProfile   PlayerProfile `gorm:"foreignKey:PlayerProfileID"`            // Relación con PlayerProfile
+	PlayerProfileID uint          `gorm:"type:int"`
+	PlayerProfile   PlayerProfile `gorm:"foreignKey:PlayerProfileID" validate:"-"`
 }
 
 // Validate validates the Achievement struct.

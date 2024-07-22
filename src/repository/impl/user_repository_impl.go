@@ -55,8 +55,8 @@ func (u *UserRepositoryImpl) GetUser(userID uint) (*models.User, error) {
 }
 
 // UpdateUser implements repository.UserRepository.
-func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
-	exists, err := u.CheckUserExists(user.ID)
+func (u *UserRepositoryImpl) UpdateUser(userID uint, user *models.User) error {
+	exists, err := u.CheckUserExists(userID)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (u *UserRepositoryImpl) UpdateUser(user *models.User) error {
 		return helpers.ErrorUserNotFound
 	}
 
-	result := u.Db.Model(&models.User{}).Where(IDPlaceHolder, user.ID).Updates(user)
+	result := u.Db.Model(&models.User{}).Where(IDPlaceHolder, userID).Updates(user)
 	if result.Error != nil {
 		return helpers.ErrorUpdateUser
 	}

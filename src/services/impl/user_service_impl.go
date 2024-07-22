@@ -112,7 +112,7 @@ func (u *UserServiceImpl) Update(userID uint, user request.UpdateUserRequest) er
 	userData.Email = user.Email
 	userData.Age = user.Age
 
-	err = u.UserRepository.UpdateUser(userData)
+	err = u.UserRepository.UpdateUser(userID, userData)
 	if err != nil {
 		return err
 	}

@@ -161,7 +161,7 @@ func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 		user.Email = "UPDATED"
 
 		// Attempt to update user
-		require.NoError(t, repo.UpdateUser(user), "Error updating user")
+		require.NoError(t, repo.UpdateUser(user.ID, user), "Error updating user")
 
 		// Verify user was updated
 		var dbUser models.User
@@ -194,7 +194,7 @@ func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 		}
 
 		// Attempt to update the non-existent user
-		err := repo.UpdateUser(nonExistentUser)
+		err := repo.UpdateUser(0, nonExistentUser)
 		require.Error(t, err, "Expected error when updating non-existent user")
 	})
 }

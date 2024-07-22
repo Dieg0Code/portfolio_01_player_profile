@@ -22,8 +22,8 @@ func (_m *UserRepository) GetUser(userID uint) (*models.User, error) {
 	return user, args.Error(1)
 }
 
-func (_m *UserRepository) UpdateUser(user *models.User) error {
-	ret := _m.Called(user)
+func (_m *UserRepository) UpdateUser(userID uint, user *models.User) error {
+	ret := _m.Called(userID, user)
 	return ret.Error(0)
 }
 

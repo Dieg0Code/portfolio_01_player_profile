@@ -274,7 +274,7 @@ func TestUserServiceImpl_Update(t *testing.T) {
 	t.Run("UpdateUser_Success", func(t *testing.T) {
 		mockUserRepo := new(mocks.UserRepository)
 		mockValidator := validator.New()
-		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil) // Assuming no password hasher needed for update
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
 
 		userID := uint(1)
 		updateRequest := request.UpdateUserRequest{
@@ -290,8 +290,15 @@ func TestUserServiceImpl_Update(t *testing.T) {
 			Age:      20,
 		}
 
+		updatedUser := &models.User{
+			Model:    gorm.Model{ID: userID},
+			UserName: updateRequest.UserName,
+			Email:    updateRequest.Email,
+			Age:      updateRequest.Age,
+		}
+
 		mockUserRepo.On("GetUser", userID).Return(existingUser, nil)
-		mockUserRepo.On("UpdateUser", mock.AnythingOfType("*models.User")).Return(nil)
+		mockUserRepo.On("UpdateUser", userID, updatedUser).Return(nil)
 
 		err := userService.Update(userID, updateRequest)
 
@@ -356,7 +363,7 @@ func TestUserServiceImpl_Update(t *testing.T) {
 		}
 
 		mockUserRepo.On("GetUser", userID).Return(existingUser, nil)
-		mockUserRepo.On("UpdateUser", mock.AnythingOfType("*models.User")).Return(errors.New("update error"))
+		mockUserRepo.On("UpdateUser", mock.AnythingOfType("uint"), mock.AnythingOfType("*models.User")).Return(errors.New("update error"))
 
 		err := userService.Update(userID, updateRequest)
 

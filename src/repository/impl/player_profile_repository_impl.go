@@ -51,8 +51,8 @@ func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID uint) (*m
 }
 
 // UpdatePlayerProfile implements repository.PlayerProfileRepository.
-func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.PlayerProfile) error {
-	exists, err := p.CheckPlayerProfileExists(playerProfile.ID)
+func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfileID uint, playerProfile *models.PlayerProfile) error {
+	exists, err := p.CheckPlayerProfileExists(playerProfileID)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfile *models.
 		return helpers.ErrorPlayerProfileNotFound
 	}
 
-	result := p.Db.Model(&models.PlayerProfile{}).Where(IDPlaceHolder, playerProfile.ID).Updates(playerProfile)
+	result := p.Db.Model(&models.PlayerProfile{}).Where(IDPlaceHolder, playerProfileID).Updates(playerProfile)
 	if result.Error != nil {
 		return helpers.ErrorUpdatePlayer
 	}

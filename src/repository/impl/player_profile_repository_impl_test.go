@@ -208,7 +208,7 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 
 		// Update Player
 		testPlayerProfile.Nickname = "newNickname"
-		resultUpdatePlayer := playerRepo.UpdatePlayerProfile(testPlayerProfile)
+		resultUpdatePlayer := playerRepo.UpdatePlayerProfile(testPlayerProfile.ID, testPlayerProfile)
 		require.NoError(t, resultUpdatePlayer, "Error updating player profile")
 
 		// Get Player
@@ -232,7 +232,7 @@ func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 		playerRepo := NewPlayerProfileRepositoryImpl(db)
 
 		// Attempt to update player profile
-		err := playerRepo.UpdatePlayerProfile(testPlayerProfile)
+		err := playerRepo.UpdatePlayerProfile(testPlayerProfile.ID, testPlayerProfile)
 		require.Error(t, err, "Expected error updating player profile")
 		require.EqualError(t, err, helpers.ErrorPlayerProfileNotFound.Error(), "Error messages do not match")
 	})

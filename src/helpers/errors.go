@@ -23,3 +23,9 @@ var ErrorDeletingAchievement = errors.New("error deleting achievement")
 
 var ErrInvalidUserID = errors.New("invalid user id")
 var ErrUserDataValidation = errors.New("user data validation error")
+
+// Player Profile errors.
+var ErrInvalidPlayerProfileID = errors.New("invalid player profile id")
+var ErrPlayerProfileDataValidation = errors.New("player profile data validation error")
+
+var ErrRepository = errors.New("error in repository")

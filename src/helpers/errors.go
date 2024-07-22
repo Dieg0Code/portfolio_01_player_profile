@@ -16,3 +16,10 @@ var ErrorDeletingUser = errors.New("error deleting user")
 var ErrorAchievementNotFound = errors.New("achievement not found")
 var ErrorUpdateAchievement = errors.New("error updating achievement")
 var ErrorDeletingAchievement = errors.New("error deleting achievement")
+
+// Services
+
+// User errors.
+
+var ErrInvalidUserID = errors.New("invalid user id")
+var ErrUserDataValidation = errors.New("user data validation error")

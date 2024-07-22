@@ -3,6 +3,7 @@ package impl
 import (
 	"github.com/dieg0code/player-profile/src/data/request"
 	"github.com/dieg0code/player-profile/src/data/response"
+	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
@@ -46,6 +47,10 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 // Delete implements services.UserService.
 func (u *UserServiceImpl) Delete(userID uint) error {
 
+	if userID == 0 {
+		return helpers.ErrInvalidUserID
+	}
+
 	err := u.UserRepository.DeleteUser(userID)
 	if err != nil {
 		return err
@@ -62,9 +67,17 @@ func (u *UserServiceImpl) GetAll() ([]response.UserResponse, error) {
 // GetByID implements services.UserService.
 func (u *UserServiceImpl) GetByID(userID uint) (*response.UserResponse, error) {
 
+	if userID == 0 {
+		return nil, helpers.ErrInvalidUserID
+	}
+
 	user, err := u.UserRepository.GetUser(userID)
 	if err != nil {
 		return nil, err
+	}
+
+	if user == nil {
+		return nil, helpers.ErrorUserNotFound
 	}
 
 	userResponse := response.UserResponse{
@@ -72,6 +85,11 @@ func (u *UserServiceImpl) GetByID(userID uint) (*response.UserResponse, error) {
 		UserName: user.UserName,
 		Email:    user.Email,
 		Age:      user.Age,
+	}
+
+	err = u.Validate.Struct(userResponse)
+	if err != nil {
+		return nil, helpers.ErrUserDataValidation
 	}
 
 	return &userResponse, nil

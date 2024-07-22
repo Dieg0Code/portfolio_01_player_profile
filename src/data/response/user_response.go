@@ -1,8 +1,8 @@
 package response
 
 type UserResponse struct {
-	ID       uint   `json:"id"`
-	UserName string `json:"user_name"`
-	Email    string `json:"email"`
-	Age      int    `json:"age"`
+	ID       uint   `json:"id" validate:"required"`
+	UserName string `json:"user_name" validate:"required,min=3,max=255"`
+	Email    string `json:"email" validate:"required,email"`
+	Age      int    `json:"age" validate:"required,gte=18"`
 }

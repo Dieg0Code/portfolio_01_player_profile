@@ -15,8 +15,11 @@ func (_m *UserRepository) CreateUser(user *models.User) error {
 }
 
 func (_m *UserRepository) GetUser(userID uint) (*models.User, error) {
-	ret := _m.Called(userID)
-	return ret.Get(0).(*models.User), ret.Error(1)
+	args := _m.Called(userID)
+
+	user, _ := args.Get(0).(*models.User)
+
+	return user, args.Error(1)
 }
 
 func (_m *UserRepository) UpdateUser(user *models.User) error {

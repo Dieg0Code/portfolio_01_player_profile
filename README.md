@@ -1,16 +1,16 @@
-# Project 01 - Player profile
+# Project 01 - Player Profile
 
 ## Description
 
-El proyecto consiste en una API REST que expone una base de datos que maneja 3 entidades:
+The project consists of a REST API that exposes a database managing 3 entities:
 
 - User
 - PlayerProfile
 - Achievement
 
-Un Usuario puede tener varios PlayerProfiles y un PlayerProfile puede tener varios Achievements.
+A User can have multiple PlayerProfiles, and a PlayerProfile can have multiple Achievements.
 
-La relación sería la siguiente:	
+The relationship would be as follows:
 
 ```mermaid
 ---
@@ -47,7 +47,7 @@ erDiagram
     PLAYERPROFILE ||--o{ ACHIEVEMENT : unlocks
 ```
 
-## Tecnologías
+## Technologies
 
 - Golang 1.22.1
 - Gin Gonic
@@ -63,10 +63,9 @@ erDiagram
 - SonarCloud
 - Synk
 
-La aplicación consta de una API con los respectivos endpoints para cada entidad, como base de datos se utiliza PostgreSQL y se utiliza Docker Compose para levantar la base de datos y la aplicación. Se despliega mediante un Pipeline de GitHub Actions a un entorno de AWS utilizando Terraform.
+The application consists of an API with respective endpoints for each entity. PostgreSQL is used as the database, and Docker Compose is used to set up both the database and the application. Deployment is handled via a GitHub Actions pipeline to an AWS environment using Terraform.
 
-
-## Diagrama de Clases
+## Class Diagram
 
 ```mermaid
 classDiagram
@@ -111,82 +110,81 @@ classDiagram
         +DeleteAchievement() error
     }
 
-    User "1" --o "*" PlayerProfile : tiene
-    PlayerProfile "1" --o "*" Achievement : desbloquea
+    User "1" --o "*" PlayerProfile : has
+    PlayerProfile "1" --o "*" Achievement : unlocks
 ```
 
 ## Endpoints
 
 ### User
 
-- **GET /users**: Devuelve todos los usuarios.
-- **GET /users/{id}**: Devuelve un usuario por su id.
-- **POST /users**: Crea un usuario.
-- **PUT /users/{id}**: Actualiza un usuario por su id.
+- **GET /users**: Returns all users.
+- **GET /users/{id}**: Returns a user by their id.
+- **POST /users**: Creates a user.
+- **PUT /users/{id}**: Updates a user by their id.
 
 ### PlayerProfile
 
-- **GET /player-profiles**: Devuelve todos los perfiles de jugador.
-- **GET /player-profiles/{id}**: Devuelve un perfil de jugador por su id.
-- **POST /player-profiles**: Crea un perfil de jugador.
-- **PUT /player-profiles/{id}**: Actualiza un perfil de jugador por su id.
+- **GET /player-profiles**: Returns all player profiles.
+- **GET /player-profiles/{id}**: Returns a player profile by its id.
+- **POST /player-profiles**: Creates a player profile.
+- **PUT /player-profiles/{id}**: Updates a player profile by its id.
 
 ### Achievement
 
-- **GET /achievements**: Devuelve todos los logros.
-- **GET /achievements/{id}**: Devuelve un logro por su id.
-- **POST /achievements**: Crea un logro.
-- **PUT /achievements/{id}**: Actualiza un logro por su id.
+- **GET /achievements**: Returns all achievements.
+- **GET /achievements/{id}**: Returns an achievement by its id.
+- **POST /achievements**: Creates an achievement.
+- **PUT /achievements/{id}**: Updates an achievement by its id.
 
 ```mermaid
 sequenceDiagram
-    actor Cliente
+    actor Client
     participant Auth
     participant User
     participant PlayerProfile
     participant Achievement
 
-    Cliente->>Auth: POST /auth/login
-    Auth-->>Cliente: JWT Token
+    Client->>Auth: POST /auth/login
+    Auth-->>Client: JWT Token
 
-    Cliente->>User: GET /api/v1/users
-    User-->>Cliente: Lista paginada de usuarios
+    Client->>User: GET /api/v1/users
+    User-->>Client: Paginated list of users
 
-    Cliente->>User: POST /api/v1/users
-    User-->>Cliente: Usuario creado
+    Client->>User: POST /api/v1/users
+    User-->>Client: User created
 
-    Cliente->>PlayerProfile: GET /api/v1/player-profiles
-    PlayerProfile-->>Cliente: Lista paginada de perfiles de jugador
+    Client->>PlayerProfile: GET /api/v1/player-profiles
+    PlayerProfile-->>Client: Paginated list of player profiles
 
-    Cliente->>PlayerProfile: POST /api/v1/player-profiles
-    PlayerProfile-->>Cliente: Perfil de jugador creado
+    Client->>PlayerProfile: POST /api/v1/player-profiles
+    PlayerProfile-->>Client: Player profile created
 
-    Cliente->>Achievement: GET /api/v1/achievements
-    Achievement-->>Cliente: Lista paginada de logros
+    Client->>Achievement: GET /api/v1/achievements
+    Achievement-->>Client: Paginated list of achievements
 
-    Cliente->>Achievement: POST /api/v1/achievements
-    Achievement-->>Cliente: Logro creado
+    Client->>Achievement: POST /api/v1/achievements
+    Achievement-->>Client: Achievement created
 
-    Cliente->>Auth: POST /auth/logout
-    Auth-->>Cliente: Sesión cerrada
+    Client->>Auth: POST /auth/logout
+    Auth-->>Client: Session closed
 ```
-## Infraestructura de AWS
 
-- **VPC**: Para la configuración de la red virtual privada interna de la aplicación.
-- **EC2**: Para la creación de la instancia virtual que alojará la aplicación.
-- **RDS**: Para la creación de la base de datos PostgreSQL.
-- **Security Groups**: Para la configuración de los puertos de entrada y salida de la aplicación.
-- **IAM**: Para la creación de los roles y permisos necesarios para la aplicación.
-- **S3**: Para el almacenamiento de los archivos de configuración de Terraform.
+## AWS Infrastructure
 
+- **VPC**: For the internal virtual private network configuration of the application.
+- **EC2**: For the creation of the virtual instance hosting the application.
+- **RDS**: For the creation of the PostgreSQL database.
+- **Security Groups**: For configuring the application’s inbound and outbound ports.
+- **IAM**: For creating the necessary roles and permissions for the application.
+- **S3**: For storing Terraform configuration files.
 
-## Diagrama de Arquitectura
-
+## Architecture Diagram
 
 ```mermaid
 graph TB
     subgraph "GitHub"
-        A[Repositorio de Código]
+        A[Code Repository]
         B[GitHub Actions]
     end
 
@@ -217,4 +215,3 @@ graph TB
     H -->|Local Development| J
     J -->|Deployed to| C
 ```
-

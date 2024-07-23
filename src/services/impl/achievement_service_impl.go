@@ -74,6 +74,7 @@ func (a *AchievementServiceImpl) GetByID(achievementID uint) (*response.Achievem
 	achievementResponse := response.AchievementResponse{
 		ID:              achievement.ID,
 		Name:            achievement.Name,
+		Description:     achievement.Description,
 		PlayerProfileID: achievement.PlayerProfileID,
 	}
 

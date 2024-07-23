@@ -48,7 +48,7 @@ func (p *PlayerProfileServiceImpl) Delete(playerProfileID uint) error {
 
 	err := p.PlayerProfileRepository.DeletePlayerProfile(playerProfileID)
 	if err != nil {
-		return err
+		return helpers.ErrRepository
 	}
 
 	return nil

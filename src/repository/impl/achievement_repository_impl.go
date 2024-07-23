@@ -51,8 +51,8 @@ func (a *AchivementRepositoryImpl) GetAchievement(achievementID uint) (*models.A
 }
 
 // UpdateAchievement implements repository.AchievementRepository.
-func (a *AchivementRepositoryImpl) UpdateAchievement(achievement *models.Achievement) error {
-	exists, err := a.CheckAchievementExists(achievement.ID)
+func (a *AchivementRepositoryImpl) UpdateAchievement(achievementID uint, achievement *models.Achievement) error {
+	exists, err := a.CheckAchievementExists(achievementID)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (a *AchivementRepositoryImpl) UpdateAchievement(achievement *models.Achieve
 		return h.ErrorAchievementNotFound
 	}
 
-	result := a.Db.Model(&models.Achievement{}).Where(IDPlaceHolder, achievement.ID).Updates(achievement)
+	result := a.Db.Model(&models.Achievement{}).Where(IDPlaceHolder, achievementID).Updates(achievement)
 	if result.Error != nil {
 		return h.ErrorUpdateAchievement
 	}

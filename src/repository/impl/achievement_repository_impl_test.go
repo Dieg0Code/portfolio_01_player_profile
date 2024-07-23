@@ -6,6 +6,7 @@ import (
 	"github.com/dieg0code/player-profile/src/models"
 	"github.com/dieg0code/player-profile/src/testutils"
 	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 func TestAchievementRepository_CreateAchievement(t *testing.T) {
@@ -235,7 +236,9 @@ func TestAchievementRepository_UpdateAchievement(t *testing.T) {
 
 		// Create Achievement
 		// Create Achievement
+		achievementID := uint(1)
 		achievement := &models.Achievement{
+			Model:           gorm.Model{ID: achievementID},
 			Name:            "Test Achievement",
 			Description:     "This is a test achievement",
 			PlayerProfileID: playerProfile.ID,
@@ -248,7 +251,7 @@ func TestAchievementRepository_UpdateAchievement(t *testing.T) {
 		achievement.Name = "Updated Achievement"
 		achievement.Description = "This is an updated test achievement"
 
-		err = achievementRepo.UpdateAchievement(achievement)
+		err = achievementRepo.UpdateAchievement(achievement.ID, achievement)
 		require.NoError(t, err, "Error updating achievement")
 
 		// Verify Achievement
@@ -269,8 +272,10 @@ func TestAchievementRepository_UpdateAchievement(t *testing.T) {
 
 		achievementRepo := NewAchievementRepositoryImpl(db)
 
+		achievementID := uint(0)
+
 		// Attempt to update non-existent achievement
-		err := achievementRepo.UpdateAchievement(&models.Achievement{})
+		err := achievementRepo.UpdateAchievement(achievementID, &models.Achievement{})
 		require.Error(t, err, "Expected error updating non-existent achievement")
 	})
 }

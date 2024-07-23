@@ -1,0 +1,7 @@
+package request
+
+type CreateAchievementRequest struct {
+	Name            string `json:"name" validate:"required,min=5,max=255"`
+	Description     string `json:"description" validate:"required,min=5,max=255"`
+	PlayerProfileID uint   `json:"player_profile_id" validate:"required"`
+}

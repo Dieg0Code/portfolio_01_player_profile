@@ -2,6 +2,8 @@ package helpers
 
 import "errors"
 
+// Models
+
 // User errors.
 var ErrorUserNotFound = errors.New("user not found")
 var ErrorUpdateUser = errors.New("error updating user")
@@ -29,3 +31,9 @@ var ErrInvalidPlayerProfileID = errors.New("invalid player profile id")
 var ErrPlayerProfileDataValidation = errors.New("player profile data validation error")
 
 var ErrRepository = errors.New("error in repository")
+
+// Achievement errors.
+var ErrAchievementDataValidation = errors.New("achievement data validation error")
+var ErrInvalidAchievementID = errors.New("invalid achievement id")
+var ErrAchievementNotFound = errors.New("achievement not found")
+var ErrAchievementRepository = errors.New("error in achievement repository")

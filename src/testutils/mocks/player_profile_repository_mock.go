@@ -22,6 +22,11 @@ func (_m *PlayerProfileRepository) GetPlayerProfile(playerProfileID uint) (*mode
 	return player, args.Error(1)
 }
 
+func (_m *PlayerProfileRepository) GetAllPlayerProfiles(offset int, pageSize int) ([]models.PlayerProfile, error) {
+	ret := _m.Called(offset, pageSize)
+	return ret.Get(0).([]models.PlayerProfile), ret.Error(1)
+}
+
 func (_m *PlayerProfileRepository) UpdatePlayerProfile(playerProfileID uint, playerProfile *models.PlayerProfile) error {
 	ret := _m.Called(playerProfileID, playerProfile)
 	return ret.Error(0)

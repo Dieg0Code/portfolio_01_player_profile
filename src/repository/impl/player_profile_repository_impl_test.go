@@ -174,6 +174,62 @@ func TestPlayerProfileRespositoryImpl_GetPlayerProfile(t *testing.T) {
 
 }
 
+func TestPlayerProfileRespositoryImpl_GetAll(t *testing.T) {
+	t.Run("GetAll_Success", func(t *testing.T) {
+		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		playerRepo := NewPlayerProfileRepositoryImpl(db)
+		userRepo := NewUserRepositoryImpl(db)
+
+		resultUser := userRepo.CreateUser(testUser)
+		resultPlayer := playerRepo.CreatePlayerProfile(testPlayerProfile)
+
+		// Attempt to create user profile
+		require.NoError(t, resultUser, "Error creating user")
+		require.Nil(t, resultUser, "Error creating user")
+
+		// Verify user was created
+		require.NotZero(t, testUser.ID, "User ID is zero")
+
+		// Attempt to create Player
+		require.NoError(t, resultPlayer, "Error creating player profile")
+		require.Nil(t, resultPlayer, "Error creating player profile")
+
+		// Varify Player was created
+		require.NotZero(t, testPlayerProfile.ID, "Player Profile ID is zero")
+
+		// Attempt to get all player profiles
+		playerProfiles, err := playerRepo.GetAllPlayerProfiles(0, 10)
+		require.NoError(t, err, "Error getting all player profiles")
+		require.NotZero(t, len(playerProfiles), "Player profiles length is zero")
+	})
+
+	t.Run("GetAll_Empty", func(t *testing.T) {
+		db := testutils.SetupTestDB(&models.PlayerProfile{}, &models.User{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		playerRepo := NewPlayerProfileRepositoryImpl(db)
+
+		// Attempt to get all player profiles
+		playerProfiles, err := playerRepo.GetAllPlayerProfiles(0, 10)
+		require.NoError(t, err, "Error getting all player profiles")
+		require.Zero(t, len(playerProfiles), "Player profiles length is not zero")
+	})
+}
+
 func TestPlayerProfileRespositoryImpl_UpdatePlayerProfile(t *testing.T) {
 
 	t.Run("UpdatePlayerProfile_Success", func(t *testing.T) {

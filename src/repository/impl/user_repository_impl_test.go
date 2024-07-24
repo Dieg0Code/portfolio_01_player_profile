@@ -129,6 +129,71 @@ func TestUserRepositoryImpl_GetUser(t *testing.T) {
 	})
 }
 
+func TestUserRepositoryImpl_GetAllUsers(t *testing.T) {
+	t.Run("GetAllUsers_Success", func(t *testing.T) {
+		// Setup
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		repo := NewUserRepositoryImpl(db)
+
+		// Test Data
+		user1 := &models.User{
+			UserName: "test1",
+			PassWord: "test1",
+			Email:    "test@test.com",
+			Age:      20,
+		}
+
+		user2 := &models.User{
+			UserName: "test2",
+			PassWord: "test2",
+			Email:    "test1@test.com",
+			Age:      21,
+		}
+
+		// Attempt to create users
+		require.NoError(t, repo.CreateUser(user1), "Error creating user")
+		require.NoError(t, repo.CreateUser(user2), "Error creating user")
+
+		// Attempt to get all users
+		users, err := repo.GetAllUsers(10, 0)
+
+		// Assertions
+		require.NoError(t, err, "Error getting all users")
+		require.Len(t, users, 2, "Expected 2 users")
+		require.Equal(t, user1.UserName, users[0].UserName, "Usernames do not match")
+		require.Equal(t, user2.UserName, users[1].UserName, "Usernames do not match")
+	})
+
+	t.Run("GetAllUsers_Empty", func(t *testing.T) {
+		// Setup
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		repo := NewUserRepositoryImpl(db)
+
+		// Attempt to get all users when there are none
+		users, err := repo.GetAllUsers(10, 0)
+
+		// Assertions
+		require.NoError(t, err, "Error getting all users")
+		require.Len(t, users, 0, "Expected 0 users")
+	})
+}
+
 func TestUserRepositoryImpl_UpdateUser(t *testing.T) {
 
 	t.Run("UpdateUser_Success", func(t *testing.T) {

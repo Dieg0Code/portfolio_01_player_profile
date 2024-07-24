@@ -10,5 +10,5 @@ type PlayerProfileService interface {
 	GetByID(playerProfileID uint) (*response.PlayerProfileResponse, error)
 	Update(playerProfileID uint, playerProfile request.UpdatePlayerProfileRequest) error
 	Delete(playerProfileID uint) error
-	GetAll() ([]response.UserResponse, error)
+	GetAll(page int, pageSize int) ([]response.PlayerProfileResponse, error)
 }

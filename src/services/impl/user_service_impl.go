@@ -60,8 +60,32 @@ func (u *UserServiceImpl) Delete(userID uint) error {
 }
 
 // GetAll implements services.UserService.
-func (u *UserServiceImpl) GetAll() ([]response.UserResponse, error) {
-	panic("unimplemented")
+func (u *UserServiceImpl) GetAll(page int, pageSize int) ([]response.UserResponse, error) {
+	offset := (page - 1) * pageSize
+
+	users, err := u.UserRepository.GetAllUsers(pageSize, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	var userResponses []response.UserResponse
+	for _, user := range users {
+		userResponse := response.UserResponse{
+			ID:       user.ID,
+			UserName: user.UserName,
+			Email:    user.Email,
+			Age:      user.Age,
+		}
+
+		err = u.Validate.Struct(userResponse)
+		if err != nil {
+			return nil, helpers.ErrUserDataValidation
+		}
+
+		userResponses = append(userResponses, userResponse)
+	}
+
+	return userResponses, nil
 }
 
 // GetByID implements services.UserService.

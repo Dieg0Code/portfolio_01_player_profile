@@ -10,5 +10,5 @@ type UserService interface {
 	GetByID(userID uint) (*response.UserResponse, error)
 	Update(userID uint, user request.UpdateUserRequest) error
 	Delete(userID uint) error
-	GetAll() ([]response.UserResponse, error)
+	GetAll(page int, pageSize int) ([]response.UserResponse, error)
 }

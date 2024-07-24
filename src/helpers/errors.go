@@ -8,11 +8,13 @@ import "errors"
 var ErrorUserNotFound = errors.New("user not found")
 var ErrorUpdateUser = errors.New("error updating user")
 var ErrorDeleteUser = errors.New("error deleting user")
+var ErrorGetAllUsers = errors.New("error getting all users")
 
 // Player Profile errors.
 var ErrorPlayerProfileNotFound = errors.New("player profile not found")
 var ErrorUpdatePlayer = errors.New("error updating player")
 var ErrorDeletingUser = errors.New("error deleting user")
+var ErrorGetAllPlayerProfiles = errors.New("error getting all player profiles")
 
 // Achievement errors.
 var ErrorAchievementNotFound = errors.New("achievement not found")

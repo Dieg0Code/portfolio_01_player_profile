@@ -52,8 +52,32 @@ func (a *AchievementServiceImpl) Delete(achievementID uint) error {
 }
 
 // GetAll implements services.AchievementService.
-func (a *AchievementServiceImpl) GetAll() ([]response.AchievementResponse, error) {
-	panic("unimplemented")
+func (a *AchievementServiceImpl) GetAll(page int, pageSize int) ([]response.AchievementResponse, error) {
+	offset := (page - 1) * pageSize
+
+	achievements, err := a.AchievementRepository.GetAllAchievements(offset, pageSize)
+	if err != nil {
+		return nil, helpers.ErrAchievementRepository
+	}
+
+	var achievementResponses []response.AchievementResponse
+	for _, achievement := range achievements {
+		achievementResponse := response.AchievementResponse{
+			ID:              achievement.ID,
+			Name:            achievement.Name,
+			Description:     achievement.Description,
+			PlayerProfileID: achievement.PlayerProfileID,
+		}
+
+		err = a.Validate.Struct(achievementResponse)
+		if err != nil {
+			return nil, helpers.ErrAchievementDataValidation
+		}
+
+		achievementResponses = append(achievementResponses, achievementResponse)
+	}
+
+	return achievementResponses, nil
 }
 
 // GetByID implements services.AchievementService.

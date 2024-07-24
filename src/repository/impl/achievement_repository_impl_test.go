@@ -195,6 +195,91 @@ func TestAchievementRepository_GetAchievement(t *testing.T) {
 	})
 }
 
+func TwardAchievementRepository_GetAllAchievements(t *testing.T) {
+	t.Run("GetAllAchievements_Success", func(t *testing.T) {
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{}, &models.Achievement{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		userRepo := NewUserRepositoryImpl(db)
+		playerProfileRepo := NewPlayerProfileRepositoryImpl(db)
+		achievementRepo := NewAchievementRepositoryImpl(db)
+
+		// Create User
+		user := &models.User{
+			UserName: "testuser",
+			PassWord: "testpass",
+			Email:    "test1@test.com",
+			Age:      25,
+		}
+
+		err := userRepo.CreateUser(user)
+		require.NoError(t, err, "Error creating user")
+
+		// Create PlayerProfile
+		playerProfile := &models.PlayerProfile{
+			Nickname:   "testnick",
+			Avatar:     "test.png",
+			Level:      1,
+			Experience: 100,
+			Points:     50,
+			UserID:     user.ID,
+		}
+
+		err = playerProfileRepo.CreatePlayerProfile(playerProfile)
+		require.NoError(t, err, "Error creating player profile")
+
+		// Create Achievements
+		achievements1 := &models.Achievement{
+			Name:            "Test Achievement 1",
+			Description:     "This is a test achievement 1",
+			PlayerProfileID: playerProfile.ID,
+		}
+
+		achievements2 := &models.Achievement{
+			Name:            "Test Achievement 2",
+			Description:     "This is a test achievement 2",
+			PlayerProfileID: playerProfile.ID,
+		}
+
+		err = achievementRepo.CreateAchievement(achievements1)
+		require.NoError(t, err, "Error creating achievement 1")
+
+		err = achievementRepo.CreateAchievement(achievements2)
+		require.NoError(t, err, "Error creating achievement 2")
+
+		// Get all achievements
+		allAchievements, err := achievementRepo.GetAllAchievements(0, 10)
+		require.NoError(t, err, "Error getting all achievements")
+		require.Len(t, allAchievements, 2, "Expected 2 achievements")
+		require.Equal(t, achievements1.Name, allAchievements[0].Name, "Achievement 1 names do not match")
+		require.Equal(t, achievements2.Name, allAchievements[1].Name, "Achievement 2 names do not match")
+	})
+
+	t.Run("GetAllAchievements_Empty", func(t *testing.T) {
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{}, &models.Achievement{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		achievementRepo := NewAchievementRepositoryImpl(db)
+
+		// Get all achievements when there are none
+		allAchievements, err := achievementRepo.GetAllAchievements(0, 10)
+		require.NoError(t, err, "Error getting all achievements")
+		require.Len(t, allAchievements, 0, "Expected 0 achievements")
+	})
+}
+
 func TestAchievementRepository_UpdateAchievement(t *testing.T) {
 	t.Run("UpdateAchievement_Success", func(t *testing.T) {
 		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{}, &models.Achievement{})

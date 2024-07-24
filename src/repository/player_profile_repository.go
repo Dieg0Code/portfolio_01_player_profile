@@ -8,4 +8,5 @@ type PlayerProfileRepository interface {
 	UpdatePlayerProfile(playerProfileID uint, playerProfile *models.PlayerProfile) error
 	DeletePlayerProfile(playerProfileID uint) error
 	CheckPlayerProfileExists(playerProfileID uint) (bool, error)
+	GetAllPlayerProfiles(offset int, pageSize int) ([]models.PlayerProfile, error)
 }

@@ -9,6 +9,6 @@ type AchievementService interface {
 	Create(achievement request.CreateAchievementRequest) error
 	Delete(achievementID uint) error
 	GetByID(achievementID uint) (*response.AchievementResponse, error)
-	GetAll() ([]response.AchievementResponse, error)
+	GetAll(page int, pageSize int) ([]response.AchievementResponse, error)
 	Update(achievementID uint, achievement request.UpdateAchievementRequest) error
 }

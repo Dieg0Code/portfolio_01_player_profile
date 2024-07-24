@@ -55,8 +55,31 @@ func (p *PlayerProfileServiceImpl) Delete(playerProfileID uint) error {
 }
 
 // GetAll implements services.PlayerProfileService.
-func (p *PlayerProfileServiceImpl) GetAll() ([]response.UserResponse, error) {
-	panic("unimplemented")
+func (p *PlayerProfileServiceImpl) GetAll(page int, pageSize int) ([]response.PlayerProfileResponse, error) {
+	offset := (page - 1) * pageSize
+
+	playerProfiles, err := p.PlayerProfileRepository.GetAllPlayerProfiles(offset, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	var playerProfilesResponse []response.PlayerProfileResponse
+
+	for _, playerProfile := range playerProfiles {
+		playerProfileResponse := response.PlayerProfileResponse{
+			ID:         playerProfile.ID,
+			Nickname:   playerProfile.Nickname,
+			Avatar:     playerProfile.Avatar,
+			Level:      playerProfile.Level,
+			Experience: playerProfile.Experience,
+			Points:     playerProfile.Points,
+			UserID:     playerProfile.UserID,
+		}
+
+		playerProfilesResponse = append(playerProfilesResponse, playerProfileResponse)
+	}
+
+	return playerProfilesResponse, nil
 }
 
 // GetByID implements services.PlayerProfileService.

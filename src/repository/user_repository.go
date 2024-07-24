@@ -7,4 +7,5 @@ type UserRepository interface {
 	GetUser(userID uint) (*models.User, error)
 	UpdateUser(userID uint, user *models.User) error
 	DeleteUser(userID uint) error
+	GetAllUsers(pageSize int, offset int) ([]models.User, error)
 }

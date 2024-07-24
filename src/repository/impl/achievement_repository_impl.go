@@ -50,6 +50,19 @@ func (a *AchivementRepositoryImpl) GetAchievement(achievementID uint) (*models.A
 	return &achievementFound, nil
 }
 
+// GetAllAchievements implements repository.AchievementRepository.
+func (a *AchivementRepositoryImpl) GetAllAchievements(offset int, pageSize int) ([]models.Achievement, error) {
+	var achievements []models.Achievement
+
+	result := a.Db.Offset(offset).Limit(pageSize).Find(&achievements)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return achievements, nil
+}
+
 // UpdateAchievement implements repository.AchievementRepository.
 func (a *AchivementRepositoryImpl) UpdateAchievement(achievementID uint, achievement *models.Achievement) error {
 	exists, err := a.CheckAchievementExists(achievementID)

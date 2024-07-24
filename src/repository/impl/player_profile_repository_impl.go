@@ -50,6 +50,18 @@ func (p *PlayerProfileRepositoryImpl) GetPlayerProfile(playerProfileID uint) (*m
 	return &playerProfileFound, nil
 }
 
+// GetAllPlayerProfiles implements repository.PlayerProfileRepository.
+func (p *PlayerProfileRepositoryImpl) GetAllPlayerProfiles(offset int, pageSize int) ([]models.PlayerProfile, error) {
+	var playerProfiles []models.PlayerProfile
+
+	result := p.Db.Offset(offset).Limit(pageSize).Find(&playerProfiles)
+	if result.Error != nil {
+		return nil, helpers.ErrorGetAllPlayerProfiles
+	}
+
+	return playerProfiles, nil
+}
+
 // UpdatePlayerProfile implements repository.PlayerProfileRepository.
 func (p *PlayerProfileRepositoryImpl) UpdatePlayerProfile(playerProfileID uint, playerProfile *models.PlayerProfile) error {
 	exists, err := p.CheckPlayerProfileExists(playerProfileID)

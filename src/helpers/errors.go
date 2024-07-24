@@ -23,6 +23,8 @@ var ErrorDeletingAchievement = errors.New("error deleting achievement")
 
 // Services
 
+var ErrInvalidPagination = errors.New("invalid pagination")
+
 // User errors.
 
 var ErrInvalidUserID = errors.New("invalid user id")

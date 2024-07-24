@@ -61,6 +61,11 @@ func (u *UserServiceImpl) Delete(userID uint) error {
 
 // GetAll implements services.UserService.
 func (u *UserServiceImpl) GetAll(page int, pageSize int) ([]response.UserResponse, error) {
+
+	if page <= 0 || pageSize <= 0 {
+		return nil, helpers.ErrInvalidPagination
+	}
+
 	offset := (page - 1) * pageSize
 
 	users, err := u.UserRepository.GetAllUsers(pageSize, offset)

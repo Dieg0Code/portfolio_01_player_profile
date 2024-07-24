@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/dieg0code/player-profile/src/data/request"
+	"github.com/dieg0code/player-profile/src/data/response"
 	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
 	"github.com/dieg0code/player-profile/src/testutils/mocks"
@@ -267,6 +268,122 @@ func TestUserServiceImpl_GetById(t *testing.T) {
 		require.Nil(t, userResponse)
 		require.ErrorIs(t, err, helpers.ErrUserDataValidation)
 		mockUserRepo.AssertExpectations(t)
+	})
+}
+
+func TestUserServiceImpl_GetAll(t *testing.T) {
+	t.Run("GetAll_Success", func(t *testing.T) {
+		mockUserRepo := new(mocks.UserRepository)
+		mockValidator := validator.New()
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
+
+		// mock data
+		user1 := models.User{
+			Model:    gorm.Model{ID: 1},
+			UserName: "test1",
+			PassWord: "hashedpassword",
+			Email:    "test1@test.com",
+			Age:      20,
+		}
+
+		user2 := models.User{
+			Model:    gorm.Model{ID: 2},
+			UserName: "test2",
+			PassWord: "hashedpassword",
+			Email:    "test2@test.com",
+			Age:      21,
+		}
+		var usersMock []models.User
+		usersMock = append(usersMock, user1, user2)
+
+		mockUserRepo.On("GetAllUsers", 10, 0).Return(usersMock, nil)
+		var responseMock []response.UserResponse
+		for _, user := range usersMock {
+			responseMock = append(responseMock, response.UserResponse{
+				ID:       user.ID,
+				UserName: user.UserName,
+				Email:    user.Email,
+				Age:      user.Age,
+			})
+		}
+
+		users, err := userService.GetAll(1, 10)
+
+		require.NoError(t, err)
+		require.Equal(t, responseMock, users)
+		require.Len(t, users, 2)
+		mockUserRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAll_Error", func(t *testing.T) {
+		mockUserRepo := new(mocks.UserRepository)
+		mockValidator := validator.New()
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
+
+		mockUserRepo.On("GetAllUsers", 10, 0).Return([]models.User{}, helpers.ErrRepository)
+
+		users, err := userService.GetAll(1, 10)
+
+		require.Error(t, err)
+		require.Nil(t, users)
+		require.Equal(t, helpers.ErrRepository, err)
+		mockUserRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAll_Empty", func(t *testing.T) {
+		mockUserRepo := new(mocks.UserRepository)
+		mockValidator := validator.New()
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
+
+		mockUserRepo.On("GetAllUsers", 10, 0).Return([]models.User{}, nil)
+
+		users, err := userService.GetAll(1, 10)
+
+		require.NoError(t, err)
+		require.Nil(t, users)
+		require.Len(t, users, 0)
+		mockUserRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAll_InvalidPagination", func(t *testing.T) {
+		mockUserRepo := new(mocks.UserRepository)
+		mockValidator := validator.New()
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
+
+		users, err := userService.GetAll(0, 0)
+
+		require.Error(t, err)
+		require.Nil(t, users)
+		require.Equal(t, helpers.ErrInvalidPagination, err)
+		mockUserRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAll_ValidationError", func(t *testing.T) {
+		mockUserRepo := new(mocks.UserRepository)
+		mockValidator := validator.New()
+		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
+
+		user1 := models.User{
+			Model:    gorm.Model{ID: 1},
+			UserName: "test1",
+			Age:      20,
+		}
+
+		user2 := models.User{
+			Model:    gorm.Model{ID: 2},
+			UserName: "test2",
+		}
+
+		var usersMock []models.User
+		usersMock = append(usersMock, user1, user2)
+
+		mockUserRepo.On("GetAllUsers", 10, 0).Return(usersMock, nil)
+
+		users, err := userService.GetAll(1, 10)
+
+		require.Error(t, err)
+		require.Nil(t, users)
+		require.Equal(t, helpers.ErrUserDataValidation, err)
 	})
 }
 

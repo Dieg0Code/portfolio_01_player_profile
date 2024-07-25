@@ -215,3 +215,183 @@ func TestUserController_GetByID(t *testing.T) {
 		mockUserService.AssertExpectations(t)
 	})
 }
+
+func TestUserController_Update(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	t.Run("Update_Success", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.PUT("/users/:userID", controller.UpdateUser)
+
+		reqBody := request.UpdateUserRequest{
+			UserName: "test",
+			Email:    "test@test.com",
+			Age:      20,
+		}
+
+		mockUserService.On("Update", uint(1), reqBody).Return(nil)
+
+		body, _ := json.Marshal(reqBody)
+		req, _ := http.NewRequest(http.MethodPut, "/users/1", bytes.NewBuffer(body))
+		req.Header.Set("Content-Type", "application/json")
+
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code, "Status code should be 200")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Success", response.Status)
+
+		mockUserService.AssertExpectations(t)
+
+	})
+
+	t.Run("Update_InvalidRequestBody", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.PUT("/users/:userID", controller.UpdateUser)
+
+		req, _ := http.NewRequest(http.MethodPut, "/users/1", bytes.NewBuffer([]byte("invalid json")))
+		req.Header.Set("Content-Type", "application/json")
+
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code, "Status code should be 400")
+	})
+
+	t.Run("Update_FailedToUpdateUser", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.PUT("/users/:userID", controller.UpdateUser)
+
+		reqBody := request.UpdateUserRequest{
+			UserName: "test",
+			Email:    "test@test.com",
+			Age:      20,
+		}
+
+		mockUserService.On("Update", uint(1), reqBody).Return(errors.New("Service Error"))
+
+		body, _ := json.Marshal(reqBody)
+		req, _ := http.NewRequest(http.MethodPut, "/users/1", bytes.NewBuffer(body))
+
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code, "Status code should be 500")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "Failed to update user", response.Message)
+
+		mockUserService.AssertExpectations(t)
+	})
+
+	t.Run("Update_InvalidUserID", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.PUT("/users/:userID", controller.UpdateUser)
+
+		reqBody := request.UpdateUserRequest{
+			UserName: "test",
+			Email:    "test@test.com",
+			Age:      20,
+		}
+
+		body, _ := json.Marshal(reqBody)
+		req, _ := http.NewRequest(http.MethodPut, "/users/asd", bytes.NewBuffer(body))
+
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code, "Status code should be 400")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "invalid user id", response.Message)
+
+		mockUserService.AssertExpectations(t)
+	})
+
+}
+
+func TestUserController_Delete(t *testing.T) {
+	t.Run("Delete_Success", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.DELETE("/users/:userID", controller.DeleteUser)
+
+		mockUserService.On("Delete", uint(1)).Return(nil)
+
+		req, _ := http.NewRequest(http.MethodDelete, "/users/1", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code, "Status code should be 200")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Success", response.Status)
+
+		mockUserService.AssertExpectations(t)
+	})
+
+	t.Run("Delete_InvalidUserID", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.DELETE("/users/:userID", controller.DeleteUser)
+
+		req, _ := http.NewRequest(http.MethodDelete, "/users/asd", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code, "Status code should be 400")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "invalid user id", response.Message)
+
+		mockUserService.AssertExpectations(t)
+	})
+
+	t.Run("Delete_FailedToDeleteUser", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.DELETE("/users/:userID", controller.DeleteUser)
+
+		mockUserService.On("Delete", uint(1)).Return(errors.New("Service Error"))
+
+		req, _ := http.NewRequest(http.MethodDelete, "/users/1", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code, "Status code should be 500")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "Failed to delete user", response.Message)
+
+		mockUserService.AssertExpectations(t)
+	})
+}

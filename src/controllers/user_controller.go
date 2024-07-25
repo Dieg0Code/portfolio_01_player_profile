@@ -5,6 +5,7 @@ import (
 
 	"github.com/dieg0code/player-profile/src/data/request"
 	"github.com/dieg0code/player-profile/src/data/response"
+	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/gin-gonic/gin"
 )
@@ -119,7 +120,7 @@ func (controller *UserController) GetUserByID(ctx *gin.Context) {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: "Invalid userID",
+			Message: helpers.ErrInvalidUserID.Error(),
 			Data:    nil,
 		}
 
@@ -160,7 +161,7 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: "Invalid userID",
+			Message: helpers.ErrInvalidUserID.Error(),
 			Data:    nil,
 		}
 
@@ -216,7 +217,7 @@ func (controller *UserController) DeleteUser(ctx *gin.Context) {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: "Invalid userID",
+			Message: helpers.ErrInvalidUserID.Error(),
 			Data:    nil,
 		}
 

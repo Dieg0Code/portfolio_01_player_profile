@@ -56,11 +56,16 @@ func (p *PlayerProfileServiceImpl) Delete(playerProfileID uint) error {
 
 // GetAll implements services.PlayerProfileService.
 func (p *PlayerProfileServiceImpl) GetAll(page int, pageSize int) ([]response.PlayerProfileResponse, error) {
+
+	if page <= 0 || pageSize <= 0 {
+		return nil, helpers.ErrInvalidPagination
+	}
+
 	offset := (page - 1) * pageSize
 
 	playerProfiles, err := p.PlayerProfileRepository.GetAllPlayerProfiles(offset, pageSize)
 	if err != nil {
-		return nil, err
+		return nil, helpers.ErrRepository
 	}
 
 	var playerProfilesResponse []response.PlayerProfileResponse

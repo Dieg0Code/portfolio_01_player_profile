@@ -29,7 +29,7 @@ func (u *UserRepositoryImpl) CreateUser(user *models.User) error {
 }
 
 // GetAllUsers implements repository.UserRepository with pagination.
-func (u *UserRepositoryImpl) GetAllUsers(pageSize int, offset int) ([]models.User, error) {
+func (u *UserRepositoryImpl) GetAllUsers(offset int, pageSize int) ([]models.User, error) {
 	var users []models.User
 
 	result := u.Db.Offset(offset).Limit(pageSize).Find(&users)

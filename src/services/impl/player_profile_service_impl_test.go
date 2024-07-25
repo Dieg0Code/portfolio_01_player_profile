@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/dieg0code/player-profile/src/data/request"
+	"github.com/dieg0code/player-profile/src/data/response"
 	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/models"
 	"github.com/dieg0code/player-profile/src/testutils/mocks"
@@ -190,7 +191,105 @@ func TestPlayerProfileServiceImpl_Delete(t *testing.T) {
 	})
 }
 
-func TestPlayerProfileServiceImpl_GetAll(t *testing.T) {}
+func TestPlayerProfileServiceImpl_GetAll(t *testing.T) {
+	t.Run("GetAllPlayers_Success", func(t *testing.T) {
+		// Mocks
+		mockPlayerRepo := new(mocks.PlayerProfileRepository)
+		mockValidator := validator.New()
+		playerService := NewPlayerProfileServiceImpl(mockPlayerRepo, mockValidator)
+		// Test data
+		playerProfiles := []models.PlayerProfile{
+			{
+				Model:      gorm.Model{ID: 1},
+				Nickname:   "TestPlayer1",
+				Avatar:     "http://example.com/avatar1.png",
+				Level:      1,
+				Experience: 10,
+				Points:     5,
+				UserID:     1,
+			},
+			{
+				Model:      gorm.Model{ID: 2},
+				Nickname:   "TestPlayer2",
+				Avatar:     "http://example.com/avatar2.png",
+				Level:      2,
+				Experience: 20,
+				Points:     10,
+				UserID:     2,
+			},
+		}
+
+		mockPlayerRepo.On("GetAllPlayerProfiles", 0, 10).Return(playerProfiles, nil)
+		var responseMock []response.PlayerProfileResponse
+		for _, player := range playerProfiles {
+			responseMock = append(responseMock, response.PlayerProfileResponse{
+				ID:         player.ID,
+				Nickname:   player.Nickname,
+				Avatar:     player.Avatar,
+				Level:      player.Level,
+				Experience: player.Experience,
+				Points:     player.Points,
+				UserID:     player.UserID,
+			})
+		}
+
+		players, err := playerService.GetAll(1, 10)
+
+		require.NoError(t, err, "Error getting all players")
+		require.Equal(t, responseMock, players, "Error getting all players")
+		mockPlayerRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("GetAllPlayers_Empty", func(t *testing.T) {
+		// Mocks
+		mockPlayerRepo := new(mocks.PlayerProfileRepository)
+		mockValidator := validator.New()
+		playerService := NewPlayerProfileServiceImpl(mockPlayerRepo, mockValidator)
+		// Test data
+		playerProfiles := []models.PlayerProfile{}
+
+		mockPlayerRepo.On("GetAllPlayerProfiles", 0, 10).Return(playerProfiles, nil)
+
+		players, err := playerService.GetAll(1, 10)
+
+		require.NoError(t, err, "Error getting all players")
+		require.Empty(t, players, "Error getting all players")
+		mockPlayerRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllPlayers_RepositoryError", func(t *testing.T) {
+		// Mocks
+		mockPlayerRepo := new(mocks.PlayerProfileRepository)
+		mockValidator := validator.New()
+		playerService := NewPlayerProfileServiceImpl(mockPlayerRepo, mockValidator)
+		// Test data
+		playerProfiles := []models.PlayerProfile{}
+
+		mockPlayerRepo.On("GetAllPlayerProfiles", 0, 10).Return(playerProfiles, helpers.ErrRepository)
+
+		players, err := playerService.GetAll(1, 10)
+
+		require.Error(t, err, "Error getting all players")
+		require.Nil(t, players, "Error getting all players")
+		require.Equal(t, helpers.ErrRepository, err, "Error getting all players")
+		mockPlayerRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllPlayers_InvalidPagination", func(t *testing.T) {
+		// Mocks
+		mockPlayerRepo := new(mocks.PlayerProfileRepository)
+		mockValidator := validator.New()
+		playerService := NewPlayerProfileServiceImpl(mockPlayerRepo, mockValidator)
+
+		players, err := playerService.GetAll(0, 0)
+
+		require.Error(t, err, "Error getting all players")
+		require.Nil(t, players, "Error getting all players")
+		require.EqualError(t, err, helpers.ErrInvalidPagination.Error(), "Error getting all players")
+		mockPlayerRepo.AssertExpectations(t)
+	})
+}
 func TestPlayerProfileServiceImpl_GetByID(t *testing.T) {
 	t.Run("GetPlayer_Success", func(t *testing.T) {
 		// Mocks

@@ -22,8 +22,8 @@ func (_m *UserRepository) GetUser(userID uint) (*models.User, error) {
 	return user, args.Error(1)
 }
 
-func (_m *UserRepository) GetAllUsers(pageSize int, offset int) ([]models.User, error) {
-	ret := _m.Called(pageSize, offset)
+func (_m *UserRepository) GetAllUsers(offset int, pageSize int) ([]models.User, error) {
+	ret := _m.Called(offset, pageSize)
 	return ret.Get(0).([]models.User), ret.Error(1)
 }
 

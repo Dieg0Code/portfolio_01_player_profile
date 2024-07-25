@@ -296,7 +296,7 @@ func TestUserServiceImpl_GetAll(t *testing.T) {
 		var usersMock []models.User
 		usersMock = append(usersMock, user1, user2)
 
-		mockUserRepo.On("GetAllUsers", 10, 0).Return(usersMock, nil)
+		mockUserRepo.On("GetAllUsers", 0, 10).Return(usersMock, nil)
 		var responseMock []response.UserResponse
 		for _, user := range usersMock {
 			responseMock = append(responseMock, response.UserResponse{
@@ -320,7 +320,7 @@ func TestUserServiceImpl_GetAll(t *testing.T) {
 		mockValidator := validator.New()
 		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
 
-		mockUserRepo.On("GetAllUsers", 10, 0).Return([]models.User{}, helpers.ErrRepository)
+		mockUserRepo.On("GetAllUsers", 0, 10).Return([]models.User{}, helpers.ErrRepository)
 
 		users, err := userService.GetAll(1, 10)
 
@@ -335,7 +335,7 @@ func TestUserServiceImpl_GetAll(t *testing.T) {
 		mockValidator := validator.New()
 		userService := NewUserServiceImpl(mockUserRepo, mockValidator, nil)
 
-		mockUserRepo.On("GetAllUsers", 10, 0).Return([]models.User{}, nil)
+		mockUserRepo.On("GetAllUsers", 0, 10).Return([]models.User{}, nil)
 
 		users, err := userService.GetAll(1, 10)
 
@@ -377,7 +377,7 @@ func TestUserServiceImpl_GetAll(t *testing.T) {
 		var usersMock []models.User
 		usersMock = append(usersMock, user1, user2)
 
-		mockUserRepo.On("GetAllUsers", 10, 0).Return(usersMock, nil)
+		mockUserRepo.On("GetAllUsers", 0, 10).Return(usersMock, nil)
 
 		users, err := userService.GetAll(1, 10)
 

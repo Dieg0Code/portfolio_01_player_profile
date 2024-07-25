@@ -53,6 +53,10 @@ func (a *AchievementServiceImpl) Delete(achievementID uint) error {
 
 // GetAll implements services.AchievementService.
 func (a *AchievementServiceImpl) GetAll(page int, pageSize int) ([]response.AchievementResponse, error) {
+	if page <= 0 || pageSize <= 0 {
+		return nil, helpers.ErrInvalidPagination
+	}
+
 	offset := (page - 1) * pageSize
 
 	achievements, err := a.AchievementRepository.GetAllAchievements(offset, pageSize)

@@ -163,7 +163,7 @@ func TestUserRepositoryImpl_GetAllUsers(t *testing.T) {
 		require.NoError(t, repo.CreateUser(user2), "Error creating user")
 
 		// Attempt to get all users
-		users, err := repo.GetAllUsers(10, 0)
+		users, err := repo.GetAllUsers(0, 10)
 
 		// Assertions
 		require.NoError(t, err, "Error getting all users")
@@ -186,7 +186,7 @@ func TestUserRepositoryImpl_GetAllUsers(t *testing.T) {
 		repo := NewUserRepositoryImpl(db)
 
 		// Attempt to get all users when there are none
-		users, err := repo.GetAllUsers(10, 0)
+		users, err := repo.GetAllUsers(0, 10)
 
 		// Assertions
 		require.NoError(t, err, "Error getting all users")

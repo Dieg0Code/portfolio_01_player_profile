@@ -68,7 +68,7 @@ func (u *UserServiceImpl) GetAll(page int, pageSize int) ([]response.UserRespons
 
 	offset := (page - 1) * pageSize
 
-	users, err := u.UserRepository.GetAllUsers(pageSize, offset)
+	users, err := u.UserRepository.GetAllUsers(offset, pageSize)
 	if err != nil {
 		return nil, err
 	}

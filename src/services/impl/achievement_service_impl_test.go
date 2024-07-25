@@ -195,6 +195,116 @@ func TestAchievementServiceImpl_GetByID(t *testing.T) {
 	})
 }
 
+func TestAchievementServiceImpl_GetAll(t *testing.T) {
+	t.Run("GetAllAchievements_Success", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Test data
+		achievement := models.Achievement{
+			Model:           gorm.Model{ID: 1},
+			Name:            "Test",
+			Description:     "Test Description",
+			PlayerProfileID: 1,
+		}
+
+		achivement1 := models.Achievement{
+			Model:           gorm.Model{ID: 2},
+			Name:            "Test 2",
+			Description:     "Test Description 2",
+			PlayerProfileID: 2,
+		}
+
+		var respnseMock []models.Achievement
+		respnseMock = append(respnseMock, achievement, achivement1)
+
+		// Expectations
+		mockAchievementRepo.On("GetAllAchievements", 0, 10).Return(respnseMock, nil)
+
+		// Execution
+		result, err := achievementService.GetAll(1, 10)
+
+		// Assertions
+		require.NoError(t, err, "Error getting all achievements")
+		require.NotNil(t, result, "Expected achievements get nil")
+		require.Len(t, result, 2, "Expected achievements length")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllAchievements_Error", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Expectations
+		mockAchievementRepo.On("GetAllAchievements", 0, 10).Return([]models.Achievement{}, helpers.ErrAchievementRepository)
+
+		// Execution
+		result, err := achievementService.GetAll(1, 10)
+
+		// Assertions
+		require.Error(t, err, "Expected error getting all achievements")
+		require.Nil(t, result, "Expected achievements get nil")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllAchievements_Empty", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Expectations
+		mockAchievementRepo.On("GetAllAchievements", 0, 10).Return([]models.Achievement{}, nil)
+
+		// Execution
+		result, err := achievementService.GetAll(1, 10)
+
+		// Assertions
+		require.NoError(t, err, "Error getting all achievements")
+		require.Empty(t, result, "Expected achievements get empty")
+		require.Len(t, result, 0, "Expected achievements length")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllAchievements_RepositoryError", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Expectations
+		mockAchievementRepo.On("GetAllAchievements", 0, 10).Return([]models.Achievement{}, helpers.ErrAchievementRepository)
+
+		// Execution
+		result, err := achievementService.GetAll(1, 10)
+
+		// Assertions
+		require.Error(t, err, "Expected error getting all achievements")
+		require.Nil(t, result, "Expected achievements get nil")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAllAchievements_InvalidPagination", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Execution
+		result, err := achievementService.GetAll(0, 0)
+
+		// Assertions
+		require.Error(t, err, "Expected error getting all achievements")
+		require.Nil(t, result, "Expected achievements get nil")
+		require.EqualError(t, err, helpers.ErrInvalidPagination.Error(), "Expected error getting all achievements")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+}
+
 func TestAchievementServiceImpl_Update(t *testing.T) {
 	t.Run("UpdateAchievement_Success", func(t *testing.T) {
 		// Mocks

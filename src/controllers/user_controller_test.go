@@ -152,6 +152,66 @@ func TestUserController_GetByID(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	t.Run("GetByID_Success", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.GET("/users/:userID", controller.GetUserByID)
 
+		mockUserService.On("GetByID", uint(1)).Return(&response.UserResponse{}, nil)
+
+		req, _ := http.NewRequest(http.MethodGet, "/users/1", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code, "Status code should be 200")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Success", response.Status)
+
+		mockUserService.AssertExpectations(t)
+	})
+
+	t.Run("GetByID_InvalidUserID", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.GET("/users/:userID", controller.GetUserByID)
+
+		req, _ := http.NewRequest(http.MethodGet, "/users/asd", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code, "Status code should be 400")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "invalid user id", response.Message)
+	})
+
+	t.Run("UserNotFound", func(t *testing.T) {
+		mockUserService := new(mocks.MockUserService)
+		controller := NewUserController(mockUserService)
+		router := gin.Default()
+		router.GET("/users/:userID", controller.GetUserByID)
+		mockUserService.On("GetByID", uint(1)).Return(&response.UserResponse{}, errors.New("user not found"))
+
+		req, _ := http.NewRequest(http.MethodGet, "/users/1", nil)
+		resp := httptest.NewRecorder()
+		router.ServeHTTP(resp, req)
+
+		assert.Equal(t, http.StatusInternalServerError, resp.Code)
+
+		var response response.BaseResponse
+		err := json.Unmarshal(resp.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Error", response.Status)
+		assert.Equal(t, "Failed to get user", response.Message)
+		assert.Nil(t, response.Data)
+
+		mockUserService.AssertExpectations(t)
 	})
 }

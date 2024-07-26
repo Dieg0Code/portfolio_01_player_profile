@@ -5,25 +5,24 @@ import (
 
 	"github.com/dieg0code/player-profile/src/data/request"
 	"github.com/dieg0code/player-profile/src/data/response"
-	"github.com/dieg0code/player-profile/src/helpers"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/gin-gonic/gin"
 )
 
-type PlayerProfileController struct {
-	playerProfileService services.PlayerProfileService
+type AchievementController struct {
+	achievementService services.AchievementService
 }
 
-func NewPlayerProfileController(service services.PlayerProfileService) *PlayerProfileController {
-	return &PlayerProfileController{
-		playerProfileService: service,
+func NewAchievementController(service services.AchievementService) *AchievementController {
+	return &AchievementController{
+		achievementService: service,
 	}
 }
 
-func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context) {
-	createPlayerProfileRequest := request.CreatePlayerProfileRequest{}
+func (controller *AchievementController) CreateAchievement(ctx *gin.Context) {
+	createAchievementRequest := request.CreateAchievementRequest{}
 
-	err := ctx.ShouldBindJSON(&createPlayerProfileRequest)
+	err := ctx.ShouldBindJSON(&createAchievementRequest)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    400,
@@ -36,12 +35,12 @@ func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context)
 		return
 	}
 
-	err = controller.playerProfileService.Create(createPlayerProfileRequest)
+	err = controller.achievementService.Create(createAchievementRequest)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to create player profile",
+			Message: "Failed to create achievement",
 			Data:    nil,
 		}
 
@@ -52,14 +51,14 @@ func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context)
 	webResponse := response.BaseResponse{
 		Code:    200,
 		Status:  "Success",
-		Message: "Player profile created successfully",
+		Message: "Achievement created successfully",
 		Data:    nil,
 	}
 
 	ctx.JSON(200, webResponse)
 }
 
-func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
+func (controller *AchievementController) GetAllAchievements(ctx *gin.Context) {
 	page := ctx.Query("page")
 	pageSize := ctx.Query("pageSize")
 
@@ -89,12 +88,12 @@ func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 		return
 	}
 
-	players, err := controller.playerProfileService.GetAll(pageInt, pageSizeInt)
+	achievements, err := controller.achievementService.GetAll(pageInt, pageSizeInt)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to get players",
+			Message: "Failed to get achievements",
 			Data:    nil,
 		}
 
@@ -105,22 +104,22 @@ func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 	webResponse := response.BaseResponse{
 		Code:    200,
 		Status:  "Success",
-		Message: "Players fetched successfully",
-		Data:    players,
+		Message: "Achievements retrieved successfully",
+		Data:    achievements,
 	}
 
 	ctx.JSON(200, webResponse)
 }
 
-func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
-	playerID := ctx.Param("playerID")
+func (controller *AchievementController) GetAchievementByID(ctx *gin.Context) {
+	achivementID := ctx.Param("achievementID")
 
-	playerIDInt, err := strconv.Atoi(playerID)
+	achivementIDInt, err := strconv.Atoi(achivementID)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: helpers.ErrInvalidPlayerProfileID.Error(),
+			Message: "Invalid achievementID",
 			Data:    nil,
 		}
 
@@ -128,12 +127,12 @@ func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 		return
 	}
 
-	player, err := controller.playerProfileService.GetByID(uint(playerIDInt))
+	achievement, err := controller.achievementService.GetByID(uint(achivementIDInt))
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to get player",
+			Message: "Failed to get achievement",
 			Data:    nil,
 		}
 
@@ -144,18 +143,18 @@ func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 	webResponse := response.BaseResponse{
 		Code:    200,
 		Status:  "Success",
-		Message: "Player fetched successfully",
-		Data:    player,
+		Message: "Achievement retrieved successfully",
+		Data:    achievement,
 	}
 
 	ctx.JSON(200, webResponse)
 }
 
-func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
-	playerID := ctx.Param("playerID")
-	updatePlayerProfileRequest := request.UpdatePlayerProfileRequest{}
+func (controller *AchievementController) UpdateAchievement(ctx *gin.Context) {
+	achievementID := ctx.Param("achievementID")
+	updateAchievementRequest := request.UpdateAchievementRequest{}
 
-	err := ctx.ShouldBindJSON(&updatePlayerProfileRequest)
+	err := ctx.ShouldBindJSON(&updateAchievementRequest)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    400,
@@ -168,12 +167,12 @@ func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 		return
 	}
 
-	playerIDInt, err := strconv.Atoi(playerID)
+	achievementIDInt, err := strconv.Atoi(achievementID)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: helpers.ErrInvalidPlayerProfileID.Error(),
+			Message: "Invalid achievementID",
 			Data:    nil,
 		}
 
@@ -181,12 +180,12 @@ func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.playerProfileService.Update(uint(playerIDInt), updatePlayerProfileRequest)
+	err = controller.achievementService.Update(uint(achievementIDInt), updateAchievementRequest)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to update player",
+			Message: "Failed to update achievement",
 			Data:    nil,
 		}
 
@@ -197,22 +196,22 @@ func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 	webResponse := response.BaseResponse{
 		Code:    200,
 		Status:  "Success",
-		Message: "Player updated successfully",
+		Message: "Achievement updated successfully",
 		Data:    nil,
 	}
 
 	ctx.JSON(200, webResponse)
 }
 
-func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
-	playerID := ctx.Param("playerID")
+func (controller *AchievementController) DeleteAchievement(ctx *gin.Context) {
+	achievementID := ctx.Param("achievementID")
 
-	playerIDInt, err := strconv.Atoi(playerID)
+	achievementIDInt, err := strconv.Atoi(achievementID)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: helpers.ErrInvalidPlayerProfileID.Error(),
+			Message: "Invalid achievementID",
 			Data:    nil,
 		}
 
@@ -220,12 +219,12 @@ func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.playerProfileService.Delete(uint(playerIDInt))
+	err = controller.achievementService.Delete(uint(achievementIDInt))
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to delete player",
+			Message: "Failed to delete achievement",
 			Data:    nil,
 		}
 
@@ -236,7 +235,7 @@ func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 	webResponse := response.BaseResponse{
 		Code:    200,
 		Status:  "Success",
-		Message: "Player deleted successfully",
+		Message: "Achievement deleted successfully",
 		Data:    nil,
 	}
 

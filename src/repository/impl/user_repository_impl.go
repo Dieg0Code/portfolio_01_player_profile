@@ -13,6 +13,18 @@ type UserRepositoryImpl struct {
 	Db *gorm.DB
 }
 
+// FindByEmail implements repository.UserRepository.
+func (u *UserRepositoryImpl) FindByEmail(email string) (*models.User, error) {
+	var user models.User
+
+	result := u.Db.Where(EmailPlaceHolder, email).First(&user)
+	if result.Error != nil {
+		return nil, helpers.ErrorUserNotFound
+	}
+
+	return &user, nil
+}
+
 func NewUserRepositoryImpl(db *gorm.DB) r.UserRepository {
 	return &UserRepositoryImpl{Db: db}
 }

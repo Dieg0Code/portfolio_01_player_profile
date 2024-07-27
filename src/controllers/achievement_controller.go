@@ -59,8 +59,8 @@ func (controller *AchievementController) CreateAchievement(ctx *gin.Context) {
 }
 
 func (controller *AchievementController) GetAllAchievements(ctx *gin.Context) {
-	page := ctx.Query("page")
-	pageSize := ctx.Query("pageSize")
+	page := ctx.DefaultQuery("page", "1")
+	pageSize := ctx.DefaultQuery("pageSize", "10")
 
 	pageInt, err := strconv.Atoi(page)
 	if err != nil {

@@ -36,3 +36,11 @@ func (_m *UserRepository) DeleteUser(userID uint) error {
 	ret := _m.Called(userID)
 	return ret.Error(0)
 }
+
+func (_m *UserRepository) FindByEmail(email string) (*models.User, error) {
+	args := _m.Called(email)
+
+	user, _ := args.Get(0).(*models.User)
+
+	return user, args.Error(1)
+}

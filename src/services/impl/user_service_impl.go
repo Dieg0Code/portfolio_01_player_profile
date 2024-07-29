@@ -34,6 +34,7 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 		PassWord: string(hashedPassword),
 		Email:    user.Email,
 		Age:      user.Age,
+		Role:     "user",
 	}
 
 	err = u.UserRepository.CreateUser(&userModel)

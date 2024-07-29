@@ -20,6 +20,7 @@ func TestValidationPlayerProfile(t *testing.T) {
 				PassWord: "ValidPass123",
 				Email:    "user@example.com",
 				Age:      30,
+				Role:     "user",
 			},
 		}
 

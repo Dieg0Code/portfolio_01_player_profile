@@ -242,3 +242,7 @@ func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 
 	ctx.JSON(200, webResponse)
 }
+
+func (controller *PlayerProfileController) GetPlayerByIDFromService(playerID uint) (*response.PlayerProfileResponse, error) {
+	return controller.playerProfileService.GetByID(playerID)
+}

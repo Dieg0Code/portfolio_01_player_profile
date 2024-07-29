@@ -16,7 +16,7 @@ import (
 )
 
 func TestUserServiceImpl_Create(t *testing.T) {
-	t.Run("CreateUser_Scuccess", func(t *testing.T) {
+	t.Run("CreateUser_Success", func(t *testing.T) {
 		// Mocks
 		mockUserRepo := new(mocks.UserRepository)
 		mockValidator := validator.New()
@@ -38,6 +38,7 @@ func TestUserServiceImpl_Create(t *testing.T) {
 			PassWord: hashedPassword,
 			Email:    testUser.Email,
 			Age:      testUser.Age,
+			Role:     "user",
 		}).Return(nil)
 
 		err := userService.Create(testUser)
@@ -109,6 +110,7 @@ func TestUserServiceImpl_Create(t *testing.T) {
 			PassWord: hashedPassword,
 			Email:    testUser.Email,
 			Age:      testUser.Age,
+			Role:     "user",
 		}).Return(errors.New("repository error"))
 
 		err := userService.Create(testUser)

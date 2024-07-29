@@ -35,7 +35,7 @@ func (a *AuthServiceImpl) Login(loginRequest request.LoginRequest) (*response.Lo
 		return nil, errors.New("invalid credentials")
 	}
 
-	token, err := auth.GenerateToken(user.ID)
+	token, err := auth.GenerateToken(user.ID, user.Role)
 	if err != nil {
 		return nil, errors.New("failed to generate token")
 	}

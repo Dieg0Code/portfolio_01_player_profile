@@ -14,6 +14,7 @@ func TestValidationUser(t *testing.T) {
 			PassWord: "validPass",
 			Email:    "valid@example.com",
 			Age:      25,
+			Role:     "user",
 		}
 
 		err := validUser.Validate()

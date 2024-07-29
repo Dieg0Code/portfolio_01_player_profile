@@ -11,6 +11,7 @@ type User struct {
 	PassWord string          `gorm:"type:varchar(255);not null" validate:"required"`
 	Email    string          `gorm:"type:varchar(255);unique;not null" validate:"required"`
 	Age      int             `gorm:"type:int;not null" validate:"required"`
+	Role     string          `gorm:"type:varchar(255);not null" validate:"required,oneof=admin user"`
 	Profiles []PlayerProfile `gorm:"foreignKey:UserID"` // Relación uno a muchos con PlayerProfile
 }
 

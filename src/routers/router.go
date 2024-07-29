@@ -30,22 +30,22 @@ func NewRouter(authController *controllers.AuthController, userController *contr
 	// User routes
 	userRouter.GET("", userController.GetAllUsers)
 	userRouter.GET("/:userID", userController.GetUserByID)
-	userRouter.PUT("/:userID", userController.UpdateUser)
-	userRouter.DELETE("/:userID", userController.DeleteUser)
+	userRouter.PUT("/:userID", middleware.RoleCheckUsersMiddleware(), userController.UpdateUser)
+	userRouter.DELETE("/:userID", middleware.RoleCheckUsersMiddleware(), userController.DeleteUser)
 
 	// Player routes
 	playerRouter.POST("", playerController.CreatePlayerProfile)
 	playerRouter.GET("", playerController.GetAllPlayers)
 	playerRouter.GET("/:playerID", playerController.GetPlayerByID)
-	playerRouter.PUT("/:playerID", playerController.UpdatePlayer)
-	playerRouter.DELETE("/:playerID", playerController.DeletePlayer)
+	playerRouter.PUT("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController), playerController.UpdatePlayer)
+	playerRouter.DELETE("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController), playerController.DeletePlayer)
 
 	// Achievement routes
-	achievementRouter.POST("", achievementController.CreateAchievement)
+	achievementRouter.POST("", middleware.AuthorizationAchievementMiddleware(), achievementController.CreateAchievement)
 	achievementRouter.GET("", achievementController.GetAllAchievements)
 	achievementRouter.GET("/:achievementID", achievementController.GetAchievementByID)
-	achievementRouter.PUT("/:achievementID", achievementController.UpdateAchievement)
-	achievementRouter.DELETE("/:achievementID", achievementController.DeleteAchievement)
+	achievementRouter.PUT("/:achievementID", middleware.AuthorizationAchievementMiddleware(), achievementController.UpdateAchievement)
+	achievementRouter.DELETE("/:achievementID", middleware.AuthorizationAchievementMiddleware(), achievementController.DeleteAchievement)
 
 	return router
 }

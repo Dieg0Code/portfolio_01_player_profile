@@ -8,12 +8,12 @@ import (
 )
 
 type AuthController struct {
-	authController services.AuthService
+	authService services.AuthService
 }
 
 func NewAuthController(service services.AuthService) *AuthController {
 	return &AuthController{
-		authController: service,
+		authService: service,
 	}
 }
 
@@ -33,7 +33,7 @@ func (controller *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	loginResponse, err := controller.authController.Login(loginRequest)
+	loginResponse, err := controller.authService.Login(loginRequest)
 	if err != nil {
 		errorResponse := response.BaseResponse{
 			Code:    500,

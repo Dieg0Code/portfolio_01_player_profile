@@ -57,7 +57,9 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		}
 
 		userID := uint(claims["userID"].(float64))
+		role := claims["role"].(string)
 		ctx.Set("userID", userID)
+		ctx.Set("role", role)
 
 		ctx.Next()
 	}

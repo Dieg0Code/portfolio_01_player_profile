@@ -23,9 +23,8 @@ func (a *AchievementServiceImpl) Create(achievement request.CreateAchievementReq
 	}
 
 	achievementModel := models.Achievement{
-		Name:            achievement.Name,
-		Description:     achievement.Description,
-		PlayerProfileID: achievement.PlayerProfileID,
+		Name:        achievement.Name,
+		Description: achievement.Description,
 	}
 
 	err = a.AchievementRepository.CreateAchievement(&achievementModel)
@@ -67,10 +66,9 @@ func (a *AchievementServiceImpl) GetAll(page int, pageSize int) ([]response.Achi
 	var achievementResponses []response.AchievementResponse
 	for _, achievement := range achievements {
 		achievementResponse := response.AchievementResponse{
-			ID:              achievement.ID,
-			Name:            achievement.Name,
-			Description:     achievement.Description,
-			PlayerProfileID: achievement.PlayerProfileID,
+			ID:          achievement.ID,
+			Name:        achievement.Name,
+			Description: achievement.Description,
 		}
 
 		err = a.Validate.Struct(achievementResponse)
@@ -100,10 +98,9 @@ func (a *AchievementServiceImpl) GetByID(achievementID uint) (*response.Achievem
 	}
 
 	achievementResponse := response.AchievementResponse{
-		ID:              achievement.ID,
-		Name:            achievement.Name,
-		Description:     achievement.Description,
-		PlayerProfileID: achievement.PlayerProfileID,
+		ID:          achievement.ID,
+		Name:        achievement.Name,
+		Description: achievement.Description,
 	}
 
 	err = a.Validate.Struct(achievementResponse)

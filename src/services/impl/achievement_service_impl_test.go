@@ -22,16 +22,14 @@ func TestAchievementServiceImpl_Create(t *testing.T) {
 
 		// Test data
 		achievement := request.CreateAchievementRequest{
-			Name:            "Test Achievement",
-			Description:     "Test Description",
-			PlayerProfileID: 1,
+			Name:        "Test Achievement",
+			Description: "Test Description",
 		}
 
 		// Expectations
 		mockAchievementRepo.On("CreateAchievement", &models.Achievement{
-			Name:            achievement.Name,
-			Description:     achievement.Description,
-			PlayerProfileID: achievement.PlayerProfileID,
+			Name:        achievement.Name,
+			Description: achievement.Description,
 		}).Return(nil)
 
 		// Execution
@@ -51,9 +49,8 @@ func TestAchievementServiceImpl_Create(t *testing.T) {
 
 		// Test data
 		achievement := request.CreateAchievementRequest{
-			Name:            "",
-			Description:     "",
-			PlayerProfileID: 0,
+			Name:        "",
+			Description: "",
 		}
 
 		// Execution
@@ -135,10 +132,9 @@ func TestAchievementServiceImpl_GetByID(t *testing.T) {
 		// Test data
 		achievementID := uint(1)
 		achievement := models.Achievement{
-			Model:           gorm.Model{ID: achievementID},
-			Name:            "Test",
-			Description:     "Test Description",
-			PlayerProfileID: 1,
+			Model:       gorm.Model{ID: achievementID},
+			Name:        "Test",
+			Description: "Test Description",
 		}
 
 		// Expectations
@@ -204,17 +200,15 @@ func TestAchievementServiceImpl_GetAll(t *testing.T) {
 
 		// Test data
 		achievement := models.Achievement{
-			Model:           gorm.Model{ID: 1},
-			Name:            "Test",
-			Description:     "Test Description",
-			PlayerProfileID: 1,
+			Model:       gorm.Model{ID: 1},
+			Name:        "Test",
+			Description: "Test Description",
 		}
 
 		achivement1 := models.Achievement{
-			Model:           gorm.Model{ID: 2},
-			Name:            "Test 2",
-			Description:     "Test Description 2",
-			PlayerProfileID: 2,
+			Model:       gorm.Model{ID: 2},
+			Name:        "Test 2",
+			Description: "Test Description 2",
 		}
 
 		var respnseMock []models.Achievement

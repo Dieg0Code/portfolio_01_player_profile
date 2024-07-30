@@ -49,9 +49,8 @@ func TestAchievementRepository_CreateAchievement(t *testing.T) {
 
 		// Create Achievement
 		achievement := &models.Achievement{
-			Name:            "Test Achievement",
-			Description:     "This is a test achievement",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement",
+			Description: "This is a test achievement",
 		}
 		err = achievementRepo.CreateAchievement(achievement)
 		require.NoError(t, err, "Error creating achievement")
@@ -61,7 +60,6 @@ func TestAchievementRepository_CreateAchievement(t *testing.T) {
 		require.NoError(t, err, "Error getting achievement")
 		require.Equal(t, achievement.Name, createdAchievement.Name, "Achievement names do not match")
 		require.Equal(t, achievement.Description, createdAchievement.Description, "Achievement descriptions do not match")
-		require.Equal(t, achievement.PlayerProfileID, createdAchievement.PlayerProfileID, "Achievement player profile IDs do not match")
 	})
 
 	t.Run("CreateAchievement_Duplicate", func(t *testing.T) {
@@ -103,9 +101,8 @@ func TestAchievementRepository_CreateAchievement(t *testing.T) {
 		require.NoError(t, err, "Error creating player profile")
 
 		testAchievement1 := &models.Achievement{
-			Name:            "test",
-			Description:     "test",
-			PlayerProfileID: testPlayerProfile1.ID,
+			Name:        "test",
+			Description: "test",
 		}
 
 		// Create achievement
@@ -161,9 +158,8 @@ func TestAchievementRepository_GetAchievement(t *testing.T) {
 
 		// Create Achievement
 		achievement := &models.Achievement{
-			Name:            "Test Achievement",
-			Description:     "This is a test achievement",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement",
+			Description: "This is a test achievement",
 		}
 
 		err = achievementRepo.CreateAchievement(achievement)
@@ -174,7 +170,6 @@ func TestAchievementRepository_GetAchievement(t *testing.T) {
 		require.NoError(t, err, "Error getting achievement")
 		require.Equal(t, achievement.Name, createdAchievement.Name, "Achievement names do not match")
 		require.Equal(t, achievement.Description, createdAchievement.Description, "Achievement descriptions do not match")
-		require.Equal(t, achievement.PlayerProfileID, createdAchievement.PlayerProfileID, "Achievement player profile IDs do not match")
 	})
 
 	t.Run("GetAchievement_NotFound", func(t *testing.T) {
@@ -236,15 +231,13 @@ func TwardAchievementRepository_GetAllAchievements(t *testing.T) {
 
 		// Create Achievements
 		achievements1 := &models.Achievement{
-			Name:            "Test Achievement 1",
-			Description:     "This is a test achievement 1",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement 1",
+			Description: "This is a test achievement 1",
 		}
 
 		achievements2 := &models.Achievement{
-			Name:            "Test Achievement 2",
-			Description:     "This is a test achievement 2",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement 2",
+			Description: "This is a test achievement 2",
 		}
 
 		err = achievementRepo.CreateAchievement(achievements1)
@@ -323,10 +316,9 @@ func TestAchievementRepository_UpdateAchievement(t *testing.T) {
 		// Create Achievement
 		achievementID := uint(1)
 		achievement := &models.Achievement{
-			Model:           gorm.Model{ID: achievementID},
-			Name:            "Test Achievement",
-			Description:     "This is a test achievement",
-			PlayerProfileID: playerProfile.ID,
+			Model:       gorm.Model{ID: achievementID},
+			Name:        "Test Achievement",
+			Description: "This is a test achievement",
 		}
 
 		err = achievementRepo.CreateAchievement(achievement)
@@ -406,9 +398,8 @@ func TestAchievementRepository_DeleteAchievement(t *testing.T) {
 
 		// Create Achievement
 		achievement := &models.Achievement{
-			Name:            "Test Achievement",
-			Description:     "This is a test achievement",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement",
+			Description: "This is a test achievement",
 		}
 
 		err = achievementRepo.CreateAchievement(achievement)
@@ -482,9 +473,8 @@ func TestAchievementRepository_CheckAchievementExists(t *testing.T) {
 
 		// Create Achievement
 		achievement := &models.Achievement{
-			Name:            "Test Achievement",
-			Description:     "This is a test achievement",
-			PlayerProfileID: playerProfile.ID,
+			Name:        "Test Achievement",
+			Description: "This is a test achievement",
 		}
 
 		err = achievementRepo.CreateAchievement(achievement)

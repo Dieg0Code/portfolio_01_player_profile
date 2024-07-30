@@ -9,9 +9,8 @@ import (
 func TestValidationAchievement(t *testing.T) {
 	t.Run("Validate_Success", func(t *testing.T) {
 		validAchievement := Achievement{
-			Name:            "First Achievement",
-			Description:     "Description of the first achievement",
-			PlayerProfileID: 1,
+			Name:        "First Achievement",
+			Description: "Description of the first achievement",
 		}
 
 		err := validAchievement.Validate()

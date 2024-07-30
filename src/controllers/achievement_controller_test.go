@@ -23,9 +23,8 @@ func TestAchievementController_Create(t *testing.T) {
 		router.POST("/achievement", controller.CreateAchievement)
 
 		reqBody := request.CreateAchievementRequest{
-			Name:            "Achievement 1",
-			Description:     "Description 1",
-			PlayerProfileID: 1,
+			Name:        "Achievement 1",
+			Description: "Description 1",
 		}
 
 		mockAchievementService.On("Create", reqBody).Return(nil)
@@ -80,9 +79,8 @@ func TestAchievementController_Create(t *testing.T) {
 		router.POST("/achievement", controller.CreateAchievement)
 
 		reqBody := request.CreateAchievementRequest{
-			Name:            "Achievement 1",
-			Description:     "Description 1",
-			PlayerProfileID: 1,
+			Name:        "Achievement 1",
+			Description: "Description 1",
 		}
 
 		mockAchievementService.On("Create", reqBody).Return(assert.AnError)

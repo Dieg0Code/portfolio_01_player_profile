@@ -1,8 +1,15 @@
 package impl
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"github.com/dieg0code/player-profile/src/services"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type BcryptHasher struct{}
+
+func NewPassWordHasher() services.PasswordHasher {
+	return &BcryptHasher{}
+}
 
 func (h *BcryptHasher) HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

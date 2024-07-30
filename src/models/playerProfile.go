@@ -14,7 +14,7 @@ type PlayerProfile struct {
 	Points       int           `gorm:"type:int;not null" validate:"required"`
 	UserID       uint          `gorm:"type:int;not null" validate:"required"` // Clave foránea
 	User         User          `gorm:"foreignKey:UserID"`                     // Relación con User
-	Achievements []Achievement `gorm:"foreignKey:PlayerProfileID"`            // Relación uno a muchos con Achievement
+	Achievements []Achievement `gorm:"many2many:player_profile_achievements"`
 }
 
 func (p *PlayerProfile) Validate() error {

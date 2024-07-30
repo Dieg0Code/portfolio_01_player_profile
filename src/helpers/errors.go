@@ -2,6 +2,8 @@ package helpers
 
 import "errors"
 
+var ErrRegisterNotFound = errors.New("register not found")
+
 // Models
 
 // User errors.

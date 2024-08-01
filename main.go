@@ -26,8 +26,10 @@ func main() {
 
 	passWordHasher := services.NewPassWordHasher()
 
-	db.AutoMigrate(&models.PlayerProfile{}, &models.Achievement{}, &models.PlayerProfileAchievement{}, &models.PlayerProfileAchievement{})
-
+	err = db.AutoMigrate(&models.PlayerProfile{}, &models.Achievement{}, &models.PlayerProfileAchievement{}, &models.PlayerProfileAchievement{})
+	if err != nil {
+		panic(err)
+	}
 	// User repo
 	userRepo := repo.NewUserRepositoryImpl(db)
 	//Player profile repo

@@ -324,3 +324,59 @@ func TestUserRepositoryImpl_DeleteUser(t *testing.T) {
 		require.Error(t, err, "Expected error when deleting non-existent user")
 	})
 }
+
+func TestUserRepository_FindByEmail(t *testing.T) {
+	t.Run("FindByEmail_Success", func(t *testing.T) {
+		// Setup
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		// Create repository instance
+		repo := NewUserRepositoryImpl(db)
+
+		// Define user to be created
+		user := &models.User{
+			UserName: "test",
+			PassWord: "test",
+			Email:    "test@test.com",
+			Age:      20,
+		}
+
+		// Attempt to create user
+		require.NoError(t, repo.CreateUser(user), "Error creating user")
+
+		// Verify user was created
+		require.NotZero(t, user.ID, "User ID is zero")
+
+		// Attempt to find user by email
+		dbUser, err := repo.FindByEmail(user.Email)
+		require.NoError(t, err, "Error finding user by email")
+
+		// Assertions
+		require.Equal(t, user.Email, dbUser.Email, "Emails do not match")
+	})
+
+	t.Run("FindByEmail_NotFound", func(t *testing.T) {
+		// Setup
+		db := testutils.SetupTestDB(&models.User{}, &models.PlayerProfile{})
+		defer func() {
+			sqlDB, _ := db.DB()
+			err := sqlDB.Close()
+			if err != nil {
+				t.Errorf("Error closing database connection: %v", err)
+			}
+		}()
+
+		repo := NewUserRepositoryImpl(db)
+
+		// Attempt to find a non-existent user by email
+		_, err := repo.FindByEmail("nonexistent") // Assume "nonexistent" is a non-existent email
+		require.Error(t, err, "Expected error when finding non-existent user by email")
+	})
+}

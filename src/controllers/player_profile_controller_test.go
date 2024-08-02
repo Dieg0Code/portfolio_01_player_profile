@@ -353,3 +353,57 @@ func TestPlayerController_Delete(t *testing.T) {
 		mockPlayerService.AssertExpectations(t)
 	})
 }
+
+func TestPlayerController_GetPlayerWithAchievements(t *testing.T) {
+	t.Run("GetPlayerWithAchievements_Success", func(t *testing.T) {
+		mockPlayerService := new(mocks.MockPlayerProfileService)
+		controller := NewPlayerProfileController(mockPlayerService)
+		router := gin.Default()
+		router.GET("/player/:playerID/achievements", controller.GetPlayerWithAchievements)
+
+		mockPlayerService.On("GetPlayerWithAchievements", uint(1)).Return(&response.PlayerWithAchievements{}, nil)
+
+		req, _ := http.NewRequest(http.MethodGet, "/player/1/achievements", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code, "Status code should be 200")
+
+		var response response.BaseResponse
+		err := json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Should be able to unmarshal response")
+		assert.Equal(t, "Success", response.Status)
+
+		mockPlayerService.AssertExpectations(t)
+	})
+
+	t.Run("GetPlayerWithAchievements_InvalidPlayerID", func(t *testing.T) {
+		mockPlayerService := new(mocks.MockPlayerProfileService)
+		controller := NewPlayerProfileController(mockPlayerService)
+		router := gin.Default()
+		router.GET("/player/:playerID/achievements", controller.GetPlayerWithAchievements)
+
+		req, _ := http.NewRequest(http.MethodGet, "/player/asd/achievements", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code, "Status code should be 400")
+		mockPlayerService.AssertNotCalled(t, "GetPlayerWithAchievements")
+	})
+
+	t.Run("GetPlayerWithAchievements_FailedToGetPlayerWithAchievements", func(t *testing.T) {
+		mockPlayerService := new(mocks.MockPlayerProfileService)
+		controller := NewPlayerProfileController(mockPlayerService)
+		router := gin.Default()
+		router.GET("/player/:playerID/achievements", controller.GetPlayerWithAchievements)
+
+		mockPlayerService.On("GetPlayerWithAchievements", uint(1)).Return(nil, assert.AnError)
+
+		req, _ := http.NewRequest(http.MethodGet, "/player/1/achievements", nil)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code, "Status code should be 500")
+		mockPlayerService.AssertExpectations(t)
+	})
+}

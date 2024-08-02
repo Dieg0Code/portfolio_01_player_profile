@@ -374,3 +374,83 @@ func TestAchievementServiceImpl_Update(t *testing.T) {
 		mockAchievementRepo.AssertExpectations(t)
 	})
 }
+
+func TetAchievementServiceImpl_GetAchievementWithPlayers(t *testing.T) {
+	t.Run("GetAchievementWithPlayers_Success", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Test data
+		achievementID := uint(1)
+		achievement := models.Achievement{
+			Model:       gorm.Model{ID: achievementID},
+			Name:        "Test",
+			Description: "Test Description",
+			PlayerProfiles: []models.PlayerProfile{
+				{
+					Model:      gorm.Model{ID: 1},
+					Nickname:   "test nickaname",
+					Avatar:     "test.png",
+					Level:      12,
+					Experience: 10,
+					Points:     100,
+				},
+			},
+		}
+
+		// Expectations
+		mockAchievementRepo.On("GetAchievementWithPlayers", achievementID).Return(&achievement, nil)
+
+		// Execution
+		result, err := achievementService.GetAchievementWithPlayers(achievementID)
+
+		// Assertions
+		require.NoError(t, err, "Error getting achievement with players")
+		require.NotNil(t, result, "Expected achievement get nil")
+		require.Equal(t, achievementID, result.ID, "Expected achievement ID")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAchievementWithPlayers_InvalidID", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Test data
+		achievementID := uint(0)
+
+		mockAchievementRepo.On("GetAchievementWithPlayers", achievementID).Return(nil, helpers.ErrInvalidAchievementID)
+
+		// Execution
+		result, err := achievementService.GetAchievementWithPlayers(achievementID)
+
+		// Assertions
+		require.Error(t, err, "Expected error getting achievement with players with invalid ID")
+		require.Nil(t, result, "Expected achievement get nil")
+		require.EqualError(t, err, helpers.ErrInvalidAchievementID.Error(), "Expected error getting achievement with players with invalid ID")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+
+	t.Run("GetAchievementWithPlayers_RepositoyError", func(t *testing.T) {
+		// Mocks
+		mockAchievementRepo := new(mocks.AchievementRepository)
+		mockValidator := validator.New()
+		achievementService := NewAchievementServiceImpl(mockAchievementRepo, mockValidator)
+
+		// Test data
+		achievementID := uint(1)
+
+		mockAchievementRepo.On("GetAchievementWithPlayers", achievementID).Return(nil, helpers.ErrAchievementRepository)
+
+		// Execution
+		result, err := achievementService.GetAchievementWithPlayers(achievementID)
+
+		// Assertions
+		require.Error(t, err, "Expected error getting achievement with players")
+		require.Nil(t, result, "Expected achievement get nil")
+		mockAchievementRepo.AssertExpectations(t)
+	})
+}

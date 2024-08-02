@@ -13,6 +13,19 @@ type AchivementRepositoryImpl struct {
 	Db *gorm.DB
 }
 
+// GetAchievementWithPlayers implements repository.AchievementRepository.
+func (a *AchivementRepositoryImpl) GetAchievementWithPlayers(achievementID uint) (*models.Achievement, error) {
+	var achievement models.Achievement
+
+	result := a.Db.Preload("PlayerProfiles").Where(IDPlaceHolder, achievementID).First(&achievement)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &achievement, nil
+}
+
 func NewAchievementRepositoryImpl(db *gorm.DB) r.AchievementRepository {
 	return &AchivementRepositoryImpl{Db: db}
 }

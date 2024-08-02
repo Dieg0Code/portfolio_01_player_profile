@@ -41,3 +41,11 @@ func (_m *PlayerProfileRepository) CheckPlayerProfileExists(playerProfileID uint
 	args := _m.Called(playerProfileID)
 	return args.Bool(0), args.Error(1)
 }
+
+func (_m *PlayerProfileRepository) GetPlayerWithAchievements(playerProfileID uint) (*models.PlayerProfile, error) {
+	args := _m.Called(playerProfileID)
+
+	player, _ := args.Get(0).(*models.PlayerProfile)
+
+	return player, args.Error(1)
+}

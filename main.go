@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/dieg0code/player-profile/docs"
 	"github.com/dieg0code/player-profile/src/config"
 	"github.com/dieg0code/player-profile/src/controllers"
 	"github.com/dieg0code/player-profile/src/models"
@@ -12,8 +13,16 @@ import (
 	services "github.com/dieg0code/player-profile/src/services/impl"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+//	@title			Player Profile API
+//	@version		1.0
+//	@description	This is a simple API for managing player profiles and achievements
+
+// @host		localhost:8080
+// @BasePath	/api/v1
 func main() {
 	// Load .env file
 	err := godotenv.Load()
@@ -26,7 +35,7 @@ func main() {
 
 	passWordHasher := services.NewPassWordHasher()
 
-	err = db.AutoMigrate(&models.PlayerProfile{}, &models.Achievement{}, &models.PlayerProfileAchievement{}, &models.PlayerProfileAchievement{})
+	err = db.AutoMigrate(&models.User{}, &models.PlayerProfile{}, &models.Achievement{})
 	if err != nil {
 		panic(err)
 	}
@@ -68,6 +77,8 @@ func main() {
 	// ROUTER
 
 	routes := routers.NewRouter(authController, userController, playerController, achievementController)
+
+	routes.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	server := &http.Server{
 		Addr:    ":8080",

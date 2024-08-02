@@ -15,6 +15,30 @@ type AchievementServiceImpl struct {
 	Validate              *validator.Validate
 }
 
+// GetAchievementWithPlayers implements services.AchievementService.
+func (a *AchievementServiceImpl) GetAchievementWithPlayers(achievementID uint) (*response.AchievementWithPlayers, error) {
+
+	achievement, err := a.AchievementRepository.GetAchievementWithPlayers(achievementID)
+
+	if err != nil {
+		return nil, helpers.ErrAchievementRepository
+	}
+
+	achievementWithPlayers := response.AchievementWithPlayers{
+		ID:   achievement.ID,
+		Name: achievement.Name,
+	}
+
+	for _, player := range achievement.PlayerProfiles {
+		achievementWithPlayers.Players = append(achievementWithPlayers.Players, response.PlayerSumary{
+			ID:       player.ID,
+			Nickname: player.Nickname,
+		})
+	}
+
+	return &achievementWithPlayers, nil
+}
+
 // Create implements services.AchievementService.
 func (a *AchievementServiceImpl) Create(achievement request.CreateAchievementRequest) error {
 	err := a.Validate.Struct(achievement)

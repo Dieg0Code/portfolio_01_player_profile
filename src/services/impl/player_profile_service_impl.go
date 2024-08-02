@@ -16,6 +16,29 @@ type PlayerProfileServiceImpl struct {
 	PasswordHasher          services.PasswordHasher
 }
 
+// GetPlayerWithAchievements implements services.PlayerProfileService.
+func (p *PlayerProfileServiceImpl) GetPlayerWithAchievements(playerProfileID uint) (*response.PlayerWithAchievements, error) {
+	playerProfile, err := p.PlayerProfileRepository.GetPlayerWithAchievements(playerProfileID)
+	if err != nil {
+		return nil, err
+	}
+
+	playerWithAchievementResponse := response.PlayerWithAchievements{
+		ID:       playerProfile.ID,
+		Nickname: playerProfile.Nickname,
+	}
+
+	for _, achievement := range playerProfile.Achievements {
+		playerWithAchievementResponse.Achievements = append(playerWithAchievementResponse.Achievements, response.AchievementsSumary{
+			ID:   achievement.ID,
+			Name: achievement.Name,
+		})
+
+	}
+
+	return &playerWithAchievementResponse, nil
+}
+
 // Create implements services.PlayerProfileService.
 func (p *PlayerProfileServiceImpl) Create(playerProfile request.CreatePlayerProfileRequest) error {
 	err := p.Validate.Struct(playerProfile)

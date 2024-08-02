@@ -30,3 +30,8 @@ func (_m *MockAchievementService) Update(achievementID uint, achievement request
 	ret := _m.Called(achievementID, achievement)
 	return ret.Error(0)
 }
+
+func (_m *MockAchievementService) GetAchievementWithPlayers(achievementID uint) (*response.AchievementWithPlayers, error) {
+	ret := _m.Called(achievementID)
+	return ret.Get(0).(*response.AchievementWithPlayers), ret.Error(1)
+}

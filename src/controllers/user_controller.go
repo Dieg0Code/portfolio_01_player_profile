@@ -20,6 +20,18 @@ func NewUserController(service services.UserService) *UserController {
 	}
 }
 
+// CreateUser godoc
+//
+//	@Summary		Create a new user
+//	@Description	Create a new user with the input payload
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		request.CreateUserRequest	true	"Create User Request"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/users [post]
 func (controller *UserController) CreateUser(ctx *gin.Context) {
 	createUserRequest := request.CreateUserRequest{}
 
@@ -59,6 +71,19 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// GetAllUsers godoc
+//
+//	@Summary		Get all users
+//	@Description	Get all users, can be paginated, default page is 1 and default pageSize is 10
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			page		query		int	false	"Page number"
+//	@Param			pageSize	query		int	false	"Page size"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/users [get]
 func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -112,6 +137,18 @@ func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// GetUserByID godoc
+//
+//	@Summary		Get user by ID
+//	@Description	Get user by ID
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int	true	"User ID"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/users/{userID} [get]
 func (controller *UserController) GetUserByID(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -153,6 +190,19 @@ func (controller *UserController) GetUserByID(ctx *gin.Context) {
 	ctx.JSON(200, successResponse)
 }
 
+// UpdateUser godoc
+//
+//	@Summary		Update user by ID
+//	@Description	Update user by ID
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int							true	"User ID"
+//	@Param			request	body		request.UpdateUserRequest	true	"Update User Request"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/users/{userID} [put]
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -209,6 +259,18 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// DeleteUser godoc
+//
+//	@Summary		Delete user by ID
+//	@Description	Delete user by ID
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int	true	"User ID"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/users/{userID} [delete]
 func (controller *UserController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 

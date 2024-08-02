@@ -11,4 +11,5 @@ type PlayerProfileService interface {
 	Update(playerProfileID uint, playerProfile request.UpdatePlayerProfileRequest) error
 	Delete(playerProfileID uint) error
 	GetAll(page int, pageSize int) ([]response.PlayerProfileResponse, error)
+	GetPlayerWithAchievements(playerProfileID uint) (*response.PlayerWithAchievements, error)
 }

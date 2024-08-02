@@ -13,6 +13,28 @@ type PlayerProfileRepositoryImpl struct {
 	Db *gorm.DB
 }
 
+// GetPlayerWithAchievements implements repository.PlayerProfileRepository.
+func (p *PlayerProfileRepositoryImpl) GetPlayerWithAchievements(playerProfileID uint) (*models.PlayerProfile, error) {
+	exists, err := p.CheckPlayerProfileExists(playerProfileID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !exists {
+		return nil, helpers.ErrorPlayerProfileNotFound
+	}
+
+	var playerProfileFound models.PlayerProfile
+
+	result := p.Db.Preload("Achievements").Where(IDPlaceHolder, playerProfileID).First(&playerProfileFound)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &playerProfileFound, nil
+}
+
 func NewPlayerProfileRepositoryImpl(db *gorm.DB) r.PlayerProfileRepository {
 	return &PlayerProfileRepositoryImpl{Db: db}
 }

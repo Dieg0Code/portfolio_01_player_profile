@@ -11,4 +11,5 @@ type AchievementService interface {
 	GetByID(achievementID uint) (*response.AchievementResponse, error)
 	GetAll(page int, pageSize int) ([]response.AchievementResponse, error)
 	Update(achievementID uint, achievement request.UpdateAchievementRequest) error
+	GetAchievementWithPlayers(achievementID uint) (*response.AchievementWithPlayers, error)
 }

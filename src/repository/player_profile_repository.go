@@ -9,4 +9,5 @@ type PlayerProfileRepository interface {
 	DeletePlayerProfile(playerProfileID uint) error
 	CheckPlayerProfileExists(playerProfileID uint) (bool, error)
 	GetAllPlayerProfiles(offset int, pageSize int) ([]models.PlayerProfile, error)
+	GetPlayerWithAchievements(playerProfileID uint) (*models.PlayerProfile, error)
 }

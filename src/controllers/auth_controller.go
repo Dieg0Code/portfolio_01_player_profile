@@ -17,6 +17,17 @@ func NewAuthController(service services.AuthService) *AuthController {
 	}
 }
 
+// Login godoc
+//	@Summary		Login to the application
+//	@Description	Login to the application with the input payload
+//	@Tags			Auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		request.LoginRequest	true	"Login Request"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/login [post]
 func (controller *AuthController) Login(ctx *gin.Context) {
 	loginRequest := request.LoginRequest{}
 

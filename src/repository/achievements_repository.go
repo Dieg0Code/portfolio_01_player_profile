@@ -9,4 +9,5 @@ type AchievementRepository interface {
 	DeleteAchievement(achievementID uint) error
 	CheckAchievementExists(achievementID uint) (bool, error)
 	GetAllAchievements(offset int, pageSize int) ([]models.Achievement, error)
+	GetAchievementWithPlayers(achievementID uint) (*models.Achievement, error)
 }

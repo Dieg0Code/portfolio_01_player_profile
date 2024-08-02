@@ -20,6 +20,18 @@ func NewPlayerProfileController(service services.PlayerProfileService) *PlayerPr
 	}
 }
 
+// CreatePlayerProfile godoc
+//
+//	@Summary		Create a new player profile
+//	@Description	Create a new player profile with the input payload
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		request.CreatePlayerProfileRequest	true	"Create Player Profile Request"
+//	@Success		200		{object}	response.BaseResponse
+//	@Failure		400		{object}	response.BaseResponse
+//	@Failure		500		{object}	response.BaseResponse
+//	@Router			/players [post]
 func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context) {
 	createPlayerProfileRequest := request.CreatePlayerProfileRequest{}
 
@@ -59,6 +71,19 @@ func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context)
 	ctx.JSON(200, webResponse)
 }
 
+// GetAllPlayers godoc
+//
+//	@Summary		Get all players
+//	@Description	Get all players with pagination, by default page is 1 and pageSize is 10
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			page		query		int	false	"Page number"
+//	@Param			pageSize	query		int	false	"Page size"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/players [get]
 func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -112,6 +137,18 @@ func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// GetPlayerByID godoc
+//
+//	@Summary		Get player by ID
+//	@Description	Get player by ID
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			playerID	path		int	true	"Player ID"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/players/{playerID} [get]
 func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 
@@ -151,6 +188,19 @@ func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// UpdatePlayer godoc
+//
+//	@Summary		Update player by ID
+//	@Description	Update player by ID
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			playerID	path		int									true	"Player ID"
+//	@Param			request		body		request.UpdatePlayerProfileRequest	true	"Update Player Profile Request"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/players/{playerID} [put]
 func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 	updatePlayerProfileRequest := request.UpdatePlayerProfileRequest{}
@@ -204,6 +254,18 @@ func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 	ctx.JSON(200, webResponse)
 }
 
+// DeletePlayer godoc
+//
+//	@Summary		Delete player by ID
+//	@Description	Delete player by ID
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			playerID	path		int	true	"Player ID"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/players/{playerID} [delete]
 func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 
@@ -238,6 +300,57 @@ func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 		Status:  "Success",
 		Message: "Player deleted successfully",
 		Data:    nil,
+	}
+
+	ctx.JSON(200, webResponse)
+}
+
+// GetPlayerWithAchievements godoc
+//
+//	@Summary		Get player with achievements by ID
+//	@Description	Get player with achievements by ID
+//	@Tags			Player
+//	@Accept			json
+//	@Produce		json
+//	@Param			playerID	path		int	true	"Player ID"
+//	@Success		200			{object}	response.BaseResponse
+//	@Failure		400			{object}	response.BaseResponse
+//	@Failure		500			{object}	response.BaseResponse
+//	@Router			/players/{playerID}/achievements [get]
+func (controller *PlayerProfileController) GetPlayerWithAchievements(ctx *gin.Context) {
+	playerID := ctx.Param("playerID")
+
+	playerIDInt, err := strconv.Atoi(playerID)
+	if err != nil {
+		errorResponse := response.BaseResponse{
+			Code:    400,
+			Status:  "Error",
+			Message: helpers.ErrInvalidPlayerProfileID.Error(),
+			Data:    nil,
+		}
+
+		ctx.JSON(400, errorResponse)
+		return
+	}
+
+	player, err := controller.playerProfileService.GetPlayerWithAchievements(uint(playerIDInt))
+	if err != nil {
+		errorResponse := response.BaseResponse{
+			Code:    500,
+			Status:  "Error",
+			Message: "Failed to get player with achievements",
+			Data:    nil,
+		}
+
+		ctx.JSON(500, errorResponse)
+		return
+	}
+
+	webResponse := response.BaseResponse{
+		Code:    200,
+		Status:  "Success",
+		Message: "Player with achievements fetched successfully",
+		Data:    player,
 	}
 
 	ctx.JSON(200, webResponse)

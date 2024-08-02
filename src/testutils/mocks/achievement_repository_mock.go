@@ -41,3 +41,11 @@ func (_m *AchievementRepository) CheckAchievementExists(achievementID uint) (boo
 	args := _m.Called(achievementID)
 	return args.Bool(0), args.Error(1)
 }
+
+func (_m *AchievementRepository) GetAchievementWithPlayers(achievementID uint) (*models.Achievement, error) {
+	args := _m.Called(achievementID)
+
+	achievement, _ := args.Get(0).(*models.Achievement)
+
+	return achievement, args.Error(1)
+}

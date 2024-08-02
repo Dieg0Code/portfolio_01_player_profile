@@ -30,3 +30,8 @@ func (_m *MockPlayerProfileService) GetAll(page int, pageSize int) ([]response.P
 	args := _m.Called(page, pageSize)
 	return args.Get(0).([]response.PlayerProfileResponse), args.Error(1)
 }
+
+func (_m *MockPlayerProfileService) GetPlayerWithAchievements(playerProfileID uint) (*response.PlayerWithAchievements, error) {
+	args := _m.Called(playerProfileID)
+	return args.Get(0).(*response.PlayerWithAchievements), args.Error(1)
+}

@@ -670,7 +670,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 1
             },
             "post": {
                 "description": "Create a new user with the input payload",
@@ -714,7 +715,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 0
             }
         },
         "/users/{userID}": {
@@ -758,7 +760,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 2
             },
             "put": {
                 "description": "Update user by ID",
@@ -809,7 +812,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 3
             },
             "delete": {
                 "description": "Delete user by ID",
@@ -851,7 +855,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 4
             }
         }
     },
@@ -1099,7 +1104,21 @@ const docTemplate = `{
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Auth"
+        },
+        {
+            "name": "User"
+        },
+        {
+            "name": "Player"
+        },
+        {
+            "name": "Achievement"
+        }
+    ]
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

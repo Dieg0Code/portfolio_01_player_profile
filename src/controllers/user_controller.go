@@ -32,6 +32,8 @@ func NewUserController(service services.UserService) *UserController {
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users [post]
+//
+//	@x-order		0
 func (controller *UserController) CreateUser(ctx *gin.Context) {
 	createUserRequest := request.CreateUserRequest{}
 
@@ -84,6 +86,8 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/users [get]
+//
+//	@x-order		1
 func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -149,6 +153,8 @@ func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [get]
+//
+//	@x-order		2
 func (controller *UserController) GetUserByID(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -203,6 +209,8 @@ func (controller *UserController) GetUserByID(ctx *gin.Context) {
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [put]
+//
+//	@x-order		3
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -271,6 +279,8 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [delete]
+//
+//	@x-order		4
 func (controller *UserController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 

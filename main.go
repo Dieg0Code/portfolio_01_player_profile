@@ -21,8 +21,13 @@ import (
 //	@version		1.0
 //	@description	This is a simple API for managing player profiles and achievements
 
-// @host		localhost:8080
-// @BasePath	/api/v1
+//	@host		localhost:8080
+//	@BasePath	/api/v1
+
+// @tag.name Auth
+// @tag.name User
+// @tag.name Player
+// @tag.name Achievement
 func main() {
 	// Load .env file
 	err := godotenv.Load()

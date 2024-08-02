@@ -18,6 +18,7 @@ func NewAuthController(service services.AuthService) *AuthController {
 }
 
 // Login godoc
+//
 //	@Summary		Login to the application
 //	@Description	Login to the application with the input payload
 //	@Tags			Auth

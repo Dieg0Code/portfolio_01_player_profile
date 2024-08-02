@@ -664,7 +664,8 @@
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 1
             },
             "post": {
                 "description": "Create a new user with the input payload",
@@ -708,7 +709,8 @@
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 0
             }
         },
         "/users/{userID}": {
@@ -752,7 +754,8 @@
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 2
             },
             "put": {
                 "description": "Update user by ID",
@@ -803,7 +806,8 @@
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 3
             },
             "delete": {
                 "description": "Delete user by ID",
@@ -845,7 +849,8 @@
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                }
+                },
+                "x-order": 4
             }
         }
     },
@@ -1093,5 +1098,19 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Auth"
+        },
+        {
+            "name": "User"
+        },
+        {
+            "name": "Player"
+        },
+        {
+            "name": "Achievement"
+        }
+    ]
 }

@@ -627,6 +627,7 @@ paths:
       summary: Get all users
       tags:
       - User
+      x-order: 1
     post:
       consumes:
       - application/json
@@ -656,6 +657,7 @@ paths:
       summary: Create a new user
       tags:
       - User
+      x-order: 0
   /users/{userID}:
     delete:
       consumes:
@@ -685,6 +687,7 @@ paths:
       summary: Delete user by ID
       tags:
       - User
+      x-order: 4
     get:
       consumes:
       - application/json
@@ -713,6 +716,7 @@ paths:
       summary: Get user by ID
       tags:
       - User
+      x-order: 2
     put:
       consumes:
       - application/json
@@ -747,4 +751,10 @@ paths:
       summary: Update user by ID
       tags:
       - User
+      x-order: 3
 swagger: "2.0"
+tags:
+- name: Auth
+- name: User
+- name: Player
+- name: Achievement

@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"github.com/dieg0code/player-profile/src/auth"
+	auth "github.com/dieg0code/player-profile/src/auth/impl"
 	"github.com/dieg0code/player-profile/src/data/response"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -28,7 +28,9 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 
 		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
-		token, err := auth.ParseToken(tokenString)
+		authUtils := auth.NewJWTAth()
+
+		token, err := authUtils.ParseToken(tokenString)
 		if err != nil || !token.Valid {
 			errorResponse := response.BaseResponse{
 				Code:    401,

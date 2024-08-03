@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	_ "github.com/dieg0code/player-profile/docs"
+	auth "github.com/dieg0code/player-profile/src/auth/impl"
 	"github.com/dieg0code/player-profile/src/config"
 	"github.com/dieg0code/player-profile/src/controllers"
 	"github.com/dieg0code/player-profile/src/models"
@@ -51,10 +52,13 @@ func main() {
 	//Achievement repo
 	achievementRepo := repo.NewAchievementRepositoryImpl(db)
 
+	// auth
+	auth := auth.NewJWTAth()
+
 	// SERVICES
 
 	// Auth service
-	authService := services.NewAuthService(userRepo, passWordHasher, validate)
+	authService := services.NewAuthService(userRepo, passWordHasher, validate, auth)
 
 	// User service
 	userService := services.NewUserServiceImpl(userRepo, validate, passWordHasher)

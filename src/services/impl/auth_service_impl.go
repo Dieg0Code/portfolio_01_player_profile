@@ -15,31 +15,36 @@ type AuthServiceImpl struct {
 	UserRepository repository.UserRepository
 	PasswordHasher services.PasswordHasher
 	Validate       *validator.Validate
+	AuthUtils      auth.AuthUtils
 }
 
 // Login implements services.AuthService.
 func (a *AuthServiceImpl) Login(loginRequest request.LoginRequest) (*response.LoginResponse, error) {
-
+	// Validación de la solicitud
 	err := a.Validate.Struct(loginRequest)
 	if err != nil {
 		return nil, err
 	}
 
+	// Búsqueda del usuario por correo electrónico
 	user, err := a.UserRepository.FindByEmail(loginRequest.Email)
 	if err != nil {
 		return nil, errors.New("user not found")
 	}
 
+	// Comparación de la contraseña
 	err = a.PasswordHasher.ComparePassword(user.PassWord, loginRequest.Password)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}
 
-	token, err := auth.GenerateToken(user.ID, user.Role)
+	// Generación del token
+	token, err := a.AuthUtils.GenerateToken(user.ID, user.Role)
 	if err != nil {
 		return nil, errors.New("failed to generate token")
 	}
 
+	// Creación de la respuesta de inicio de sesión
 	loginResponse := &response.LoginResponse{
 		Token: token,
 	}
@@ -47,10 +52,11 @@ func (a *AuthServiceImpl) Login(loginRequest request.LoginRequest) (*response.Lo
 	return loginResponse, nil
 }
 
-func NewAuthService(userRepository repository.UserRepository, passwordHasher services.PasswordHasher, validate *validator.Validate) services.AuthService {
+func NewAuthService(userRepository repository.UserRepository, passwordHasher services.PasswordHasher, validate *validator.Validate, auth auth.AuthUtils) services.AuthService {
 	return &AuthServiceImpl{
 		UserRepository: userRepository,
 		PasswordHasher: passwordHasher,
 		Validate:       validate,
+		AuthUtils:      auth,
 	}
 }

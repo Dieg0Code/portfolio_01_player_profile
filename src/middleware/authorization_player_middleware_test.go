@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -28,6 +29,7 @@ func TestRoleCheckPlayersMiddleware(t *testing.T) {
 		w := performRequest(router, "GET", "/player/2")
 
 		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Contains(t, w.Body.String(), "OK")
 	})
 
 	t.Run("Valid player access", func(t *testing.T) {
@@ -45,6 +47,7 @@ func TestRoleCheckPlayersMiddleware(t *testing.T) {
 		w := performRequest(router, "GET", "/player/1")
 
 		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Contains(t, w.Body.String(), "OK")
 	})
 
 	t.Run("Invalid player access", func(t *testing.T) {
@@ -62,6 +65,43 @@ func TestRoleCheckPlayersMiddleware(t *testing.T) {
 		w := performRequest(router, "GET", "/player/2")
 
 		assert.Equal(t, http.StatusForbidden, w.Code)
+		assert.Contains(t, w.Body.String(), "You are not allowed to perform this action")
+	})
+
+	t.Run("Invalid player ID", func(t *testing.T) {
+		router := setupRouter("user", 1)
+
+		mockGetPlayer := func(uint) (*response.PlayerProfileResponse, error) {
+			return nil, nil
+		}
+
+		router.Use(RoleCheckPlayersMiddleware(mockGetPlayer))
+		router.GET("/player/:playerID", func(c *gin.Context) {
+			c.String(200, "OK")
+		})
+
+		w := performRequest(router, "GET", "/player/invalid")
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+		assert.Contains(t, w.Body.String(), "Invalid player ID")
+	})
+
+	t.Run("Player not found", func(t *testing.T) {
+		router := setupRouter("user", 1)
+
+		mockGetPlayer := func(uint) (*response.PlayerProfileResponse, error) {
+			return nil, errors.New("Player not found")
+		}
+
+		router.Use(RoleCheckPlayersMiddleware(mockGetPlayer))
+		router.GET("/player/:playerID", func(c *gin.Context) {
+			c.String(200, "OK")
+		})
+
+		w := performRequest(router, "GET", "/player/1")
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+		assert.Contains(t, w.Body.String(), "Player not found")
 	})
 }
 

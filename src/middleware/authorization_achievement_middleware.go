@@ -7,7 +7,6 @@ import (
 
 func AuthorizationAchievementMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// authUserID := ctx.GetUint("userID")
 		authUserRole := ctx.GetString("role")
 
 		if authUserRole == "admin" {

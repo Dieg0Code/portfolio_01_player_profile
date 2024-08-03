@@ -58,7 +58,22 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		userID := uint(claims["userID"].(float64))
+		userIDFloat, ok := claims["userID"].(float64)
+		if !ok {
+			errorResponse := response.BaseResponse{
+				Code:    401,
+				Status:  "Unauthorized",
+				Message: "Invalid token",
+				Data:    nil,
+			}
+
+			ctx.JSON(401, errorResponse)
+			ctx.Abort()
+			return
+		}
+		userID := uint(userIDFloat)
+
+		// Extraer role como string
 		role, ok := claims["role"].(string)
 		if !ok {
 			errorResponse := response.BaseResponse{
@@ -72,6 +87,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
+
 		ctx.Set("userID", userID)
 		ctx.Set("role", role)
 

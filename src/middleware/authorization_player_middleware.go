@@ -3,12 +3,13 @@ package middleware
 import (
 	"strconv"
 
-	"github.com/dieg0code/player-profile/src/controllers"
 	"github.com/dieg0code/player-profile/src/data/response"
 	"github.com/gin-gonic/gin"
 )
 
-func RoleCheckPlayersMiddleware(playerController *controllers.PlayerProfileController) gin.HandlerFunc {
+type GetPlayerFunc func(uint) (*response.PlayerProfileResponse, error)
+
+func RoleCheckPlayersMiddleware(getPlayer GetPlayerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authUserID := ctx.GetUint("userID")
 		authUserRole := ctx.GetString("role")
@@ -31,7 +32,7 @@ func RoleCheckPlayersMiddleware(playerController *controllers.PlayerProfileContr
 			return
 		}
 
-		player, err := playerController.GetPlayerByIDFromService(uint(playerIDUint))
+		player, err := getPlayer(uint(playerIDUint))
 		if err != nil {
 			ctx.JSON(404, response.BaseResponse{
 				Code:    404,

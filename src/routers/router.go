@@ -37,8 +37,8 @@ func NewRouter(authController *controllers.AuthController, userController *contr
 	playerRouter.POST("", playerController.CreatePlayerProfile)
 	playerRouter.GET("", playerController.GetAllPlayers)
 	playerRouter.GET("/:playerID", playerController.GetPlayerByID)
-	playerRouter.PUT("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController), playerController.UpdatePlayer)
-	playerRouter.DELETE("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController), playerController.DeletePlayer)
+	playerRouter.PUT("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController.GetPlayerByIDFromService), playerController.UpdatePlayer)
+	playerRouter.DELETE("/:playerID", middleware.RoleCheckPlayersMiddleware(playerController.GetPlayerByIDFromService), playerController.DeletePlayer)
 
 	// Achievement routes
 	achievementRouter.POST("", middleware.AuthorizationAchievementMiddleware(), achievementController.CreateAchievement)

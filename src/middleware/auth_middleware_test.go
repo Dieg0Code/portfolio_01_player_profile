@@ -113,4 +113,28 @@ func TestAuthMiddleware(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, rec.Code, "Expected status code 401")
 		assert.Contains(t, rec.Body.String(), "Invalid token", "Expected response body to contain 'Invalid token'")
 	})
+
+	t.Run("Invalid role claim", func(t *testing.T) {
+		router := gin.New()
+		router.Use(JWTAuthMiddleware())
+		router.GET("/test", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+		})
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"userID": 1,
+			"role":   "invalid",
+		})
+		tokenString, _ := token.SignedString([]byte("secret"))
+
+		req, err := http.NewRequest(http.MethodGet, "/test", nil)
+		assert.Nil(t, err, "Expected no error creating request")
+
+		req.Header.Set("Authorization", "Bearer "+tokenString)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnauthorized, rec.Code, "Expected status code 401")
+		assert.Contains(t, rec.Body.String(), "Unauthorized", "Expected response body to contain 'Unauthorized'")
+	})
 }

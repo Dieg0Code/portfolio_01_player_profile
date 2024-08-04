@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/achievements": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all achievements with pagination, default page is 1 and default pageSize is 10",
                 "consumes": [
                     "application/json"
@@ -79,6 +84,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new achievement with the input payload",
                 "consumes": [
                     "application/json"
@@ -125,6 +135,11 @@ const docTemplate = `{
         },
         "/achievements/{achievementID}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get an achievement by ID",
                 "consumes": [
                     "application/json"
@@ -149,7 +164,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.BaseResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.AchievementResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -167,6 +194,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update an achievement with the input payload",
                 "consumes": [
                     "application/json"
@@ -218,6 +250,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete an achievement by ID",
                 "consumes": [
                     "application/json"
@@ -262,6 +299,11 @@ const docTemplate = `{
         },
         "/achievements/{achievementID}/players": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get an achievement with players by ID",
                 "consumes": [
                     "application/json"
@@ -352,6 +394,11 @@ const docTemplate = `{
         },
         "/players": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all players with pagination, by default page is 1 and pageSize is 10",
                 "consumes": [
                     "application/json"
@@ -381,7 +428,22 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.BaseResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/response.PlayerProfileResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -399,6 +461,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new player profile with the input payload",
                 "consumes": [
                     "application/json"
@@ -445,6 +512,11 @@ const docTemplate = `{
         },
         "/players/{playerID}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get player by ID",
                 "consumes": [
                     "application/json"
@@ -469,7 +541,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.BaseResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.PlayerProfileResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -487,6 +571,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update player by ID",
                 "consumes": [
                     "application/json"
@@ -538,6 +627,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete player by ID",
                 "consumes": [
                     "application/json"
@@ -582,6 +676,11 @@ const docTemplate = `{
         },
         "/players/{playerID}/achievements": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get player with achievements by ID",
                 "consumes": [
                     "application/json"
@@ -879,6 +978,7 @@ const docTemplate = `{
     },
     "definitions": {
         "request.CreateAchievementRequest": {
+            "description": "Create achievement request structure",
             "type": "object",
             "required": [
                 "description",
@@ -889,17 +989,20 @@ const docTemplate = `{
                     "description": "Achievement description",
                     "type": "string",
                     "maxLength": 255,
-                    "minLength": 5
+                    "minLength": 5,
+                    "example": "Kill the first enemy"
                 },
                 "name": {
                     "description": "Achievement name",
                     "type": "string",
                     "maxLength": 255,
-                    "minLength": 5
+                    "minLength": 5,
+                    "example": "First blood"
                 }
             }
         },
         "request.CreatePlayerProfileRequest": {
+            "description": "Create player profile request structure",
             "type": "object",
             "required": [
                 "avatar",
@@ -910,35 +1013,48 @@ const docTemplate = `{
                 "user_id"
             ],
             "properties": {
-                "avatar": {
-                    "description": "Player avatar",
-                    "type": "string"
-                },
-                "experience": {
-                    "description": "Player experience",
-                    "type": "integer"
-                },
-                "level": {
-                    "description": "Player level",
-                    "type": "integer"
-                },
                 "nickname": {
                     "description": "Player nickname",
                     "type": "string",
                     "maxLength": 20,
-                    "minLength": 3
+                    "minLength": 3,
+                    "x-order": "0",
+                    "example": "NoobMaster69"
+                },
+                "avatar": {
+                    "description": "Player avatar URL",
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "https://example.com/avatar.png"
+                },
+                "level": {
+                    "description": "Player level",
+                    "type": "integer",
+                    "x-order": "2",
+                    "example": 1
+                },
+                "experience": {
+                    "description": "Player experience",
+                    "type": "integer",
+                    "x-order": "3",
+                    "example": 100
                 },
                 "point": {
                     "description": "Player points",
-                    "type": "integer"
+                    "type": "integer",
+                    "x-order": "4",
+                    "example": 100
                 },
                 "user_id": {
                     "description": "User ID (foreign key) in the database",
-                    "type": "integer"
+                    "type": "integer",
+                    "x-order": "5",
+                    "example": 1
                 }
             }
         },
         "request.CreateUserRequest": {
+            "description": "Create user request structure",
             "type": "object",
             "required": [
                 "age",
@@ -947,30 +1063,39 @@ const docTemplate = `{
                 "user_name"
             ],
             "properties": {
-                "age": {
-                    "description": "User age",
-                    "type": "integer",
-                    "minimum": 18
+                "user_name": {
+                    "description": "User name",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3,
+                    "x-order": "0",
+                    "example": "Pepe"
                 },
                 "email": {
                     "description": "User email",
-                    "type": "string"
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "example@example.com"
                 },
                 "password": {
                     "description": "User password",
                     "type": "string",
                     "maxLength": 255,
-                    "minLength": 8
+                    "minLength": 8,
+                    "x-order": "2",
+                    "example": "012345678"
                 },
-                "user_name": {
-                    "description": "User name",
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 3
+                "age": {
+                    "description": "User age",
+                    "type": "integer",
+                    "minimum": 18,
+                    "x-order": "3",
+                    "example": 25
                 }
             }
         },
         "request.LoginRequest": {
+            "description": "Login request structure",
             "type": "object",
             "required": [
                 "email",
@@ -979,36 +1104,46 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "description": "User email",
-                    "type": "string"
+                    "type": "string",
+                    "x-order": "0",
+                    "example": "example@example.com"
                 },
                 "password": {
                     "description": "User password",
-                    "type": "string"
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "012345678"
                 }
             }
         },
         "request.UpdateAchievementRequest": {
+            "description": "Update achievement request structure",
             "type": "object",
             "required": [
                 "description",
                 "name"
             ],
             "properties": {
-                "description": {
-                    "description": "Achievement description",
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 5
-                },
                 "name": {
                     "description": "Achievement name",
                     "type": "string",
                     "maxLength": 255,
-                    "minLength": 5
+                    "minLength": 5,
+                    "x-order": "0",
+                    "example": "First blood updated"
+                },
+                "description": {
+                    "description": "Achievement description",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 5,
+                    "x-order": "1",
+                    "example": "Kill the first enemy"
                 }
             }
         },
         "request.UpdatePlayerProfileRequest": {
+            "description": "Update player profile data",
             "type": "object",
             "required": [
                 "avatar",
@@ -1018,31 +1153,42 @@ const docTemplate = `{
                 "points"
             ],
             "properties": {
-                "avatar": {
-                    "description": "Player avatar",
-                    "type": "string"
-                },
-                "experience": {
-                    "description": "Player experience",
-                    "type": "integer"
-                },
-                "level": {
-                    "description": "Player level",
-                    "type": "integer"
-                },
                 "nickname": {
                     "description": "Player nickname",
                     "type": "string",
                     "maxLength": 20,
-                    "minLength": 3
+                    "minLength": 3,
+                    "x-order": "0",
+                    "example": "NoobMaster69"
+                },
+                "avatar": {
+                    "description": "Player avatar URL",
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "https://example.com/avatar-new.png"
+                },
+                "level": {
+                    "description": "Player level",
+                    "type": "integer",
+                    "x-order": "2",
+                    "example": 2
+                },
+                "experience": {
+                    "description": "Player experience",
+                    "type": "integer",
+                    "x-order": "3",
+                    "example": 200
                 },
                 "points": {
                     "description": "Player points",
-                    "type": "integer"
+                    "type": "integer",
+                    "x-order": "4",
+                    "example": 200
                 }
             }
         },
         "request.UpdateUserRequest": {
+            "description": "Update user request structure",
             "type": "object",
             "required": [
                 "age",
@@ -1050,24 +1196,31 @@ const docTemplate = `{
                 "user_name"
             ],
             "properties": {
-                "age": {
-                    "description": "User age",
-                    "type": "integer",
-                    "minimum": 18
-                },
-                "email": {
-                    "description": "User email",
-                    "type": "string"
-                },
                 "user_name": {
                     "description": "User name",
                     "type": "string",
                     "maxLength": 20,
-                    "minLength": 3
+                    "minLength": 3,
+                    "x-order": "0",
+                    "example": "Pepe new"
+                },
+                "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "new@example.com"
+                },
+                "age": {
+                    "description": "User age",
+                    "type": "integer",
+                    "minimum": 18,
+                    "x-order": "2",
+                    "example": 25
                 }
             }
         },
         "response.AchievementResponse": {
+            "description": "Achievement response structure",
             "type": "object",
             "required": [
                 "description",
@@ -1075,21 +1228,26 @@ const docTemplate = `{
                 "name"
             ],
             "properties": {
-                "description": {
-                    "description": "Achievement description",
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 5
-                },
                 "id": {
-                    "description": "Achievement ID (primary key) in the database",
-                    "type": "integer"
+                    "description": "Achievement ID",
+                    "type": "integer",
+                    "x-order": "0",
+                    "example": 1
                 },
                 "name": {
                     "description": "Achievement name",
                     "type": "string",
                     "maxLength": 255,
-                    "minLength": 3
+                    "minLength": 3,
+                    "x-order": "1"
+                },
+                "description": {
+                    "description": "Achievement description",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 5,
+                    "x-order": "2",
+                    "example": "Kill the first enemy"
                 }
             }
         },
@@ -1100,24 +1258,78 @@ const docTemplate = `{
                 "code": {
                     "description": "HTTP status code of the response",
                     "type": "integer",
-                    "x-order": "0",
-                    "example": 200
+                    "x-order": "0"
                 },
                 "status": {
                     "description": "Status of the response",
                     "type": "string",
-                    "x-order": "1",
-                    "example": "success"
+                    "x-order": "1"
                 },
                 "message": {
                     "description": "Message of the response",
                     "type": "string",
-                    "x-order": "2",
-                    "example": "Operation completed successfully"
+                    "x-order": "2"
                 },
                 "data": {
                     "description": "Data payload of the response",
                     "x-order": "3"
+                }
+            }
+        },
+        "response.PlayerProfileResponse": {
+            "description": "Player profile response structure",
+            "type": "object",
+            "required": [
+                "avatar",
+                "experience",
+                "id",
+                "level",
+                "nickname",
+                "points",
+                "user_id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "Player ID (primary key) in the database",
+                    "type": "integer",
+                    "x-order": "0",
+                    "example": 1
+                },
+                "nickname": {
+                    "description": "Player nickname",
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "elPepe123"
+                },
+                "avatar": {
+                    "description": "Player avatar URL",
+                    "type": "string",
+                    "x-order": "2",
+                    "example": "https://example.com/avatar.png"
+                },
+                "level": {
+                    "description": "Player level",
+                    "type": "integer",
+                    "x-order": "3",
+                    "example": 1
+                },
+                "experience": {
+                    "description": "Player experience",
+                    "type": "integer",
+                    "x-order": "4",
+                    "example": 100
+                },
+                "points": {
+                    "description": "Player points",
+                    "type": "integer",
+                    "x-order": "5",
+                    "example": 100
+                },
+                "user_id": {
+                    "description": "User ID (foreign key) in the database",
+                    "type": "integer",
+                    "x-order": "6",
+                    "example": 1
                 }
             }
         }

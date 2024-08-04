@@ -1,14 +1,17 @@
 basePath: /api/v1
 definitions:
   request.CreateAchievementRequest:
+    description: Create achievement request structure
     properties:
       description:
         description: Achievement description
+        example: Kill the first enemy
         maxLength: 255
         minLength: 5
         type: string
       name:
         description: Achievement name
+        example: First blood
         maxLength: 255
         minLength: 5
         type: string
@@ -17,27 +20,40 @@ definitions:
     - name
     type: object
   request.CreatePlayerProfileRequest:
+    description: Create player profile request structure
     properties:
       avatar:
-        description: Player avatar
+        description: Player avatar URL
+        example: https://example.com/avatar.png
         type: string
+        x-order: "1"
       experience:
         description: Player experience
+        example: 100
         type: integer
+        x-order: "3"
       level:
         description: Player level
+        example: 1
         type: integer
+        x-order: "2"
       nickname:
         description: Player nickname
+        example: NoobMaster69
         maxLength: 20
         minLength: 3
         type: string
+        x-order: "0"
       point:
         description: Player points
+        example: 100
         type: integer
+        x-order: "4"
       user_id:
         description: User ID (foreign key) in the database
+        example: 1
         type: integer
+        x-order: "5"
     required:
     - avatar
     - experience
@@ -47,24 +63,33 @@ definitions:
     - user_id
     type: object
   request.CreateUserRequest:
+    description: Create user request structure
     properties:
       age:
         description: User age
+        example: 25
         minimum: 18
         type: integer
+        x-order: "3"
       email:
         description: User email
+        example: example@example.com
         type: string
+        x-order: "1"
       password:
         description: User password
+        example: "012345678"
         maxLength: 255
         minLength: 8
         type: string
+        x-order: "2"
       user_name:
         description: User name
+        example: Pepe
         maxLength: 255
         minLength: 3
         type: string
+        x-order: "0"
     required:
     - age
     - email
@@ -72,52 +97,73 @@ definitions:
     - user_name
     type: object
   request.LoginRequest:
+    description: Login request structure
     properties:
       email:
         description: User email
+        example: example@example.com
         type: string
+        x-order: "0"
       password:
         description: User password
+        example: "012345678"
         type: string
+        x-order: "1"
     required:
     - email
     - password
     type: object
   request.UpdateAchievementRequest:
+    description: Update achievement request structure
     properties:
       description:
         description: Achievement description
+        example: Kill the first enemy
         maxLength: 255
         minLength: 5
         type: string
+        x-order: "1"
       name:
         description: Achievement name
+        example: First blood updated
         maxLength: 255
         minLength: 5
         type: string
+        x-order: "0"
     required:
     - description
     - name
     type: object
   request.UpdatePlayerProfileRequest:
+    description: Update player profile data
     properties:
       avatar:
-        description: Player avatar
+        description: Player avatar URL
+        example: https://example.com/avatar-new.png
         type: string
+        x-order: "1"
       experience:
         description: Player experience
+        example: 200
         type: integer
+        x-order: "3"
       level:
         description: Player level
+        example: 2
         type: integer
+        x-order: "2"
       nickname:
         description: Player nickname
+        example: NoobMaster69
         maxLength: 20
         minLength: 3
         type: string
+        x-order: "0"
       points:
         description: Player points
+        example: 200
         type: integer
+        x-order: "4"
     required:
     - avatar
     - experience
@@ -126,39 +172,52 @@ definitions:
     - points
     type: object
   request.UpdateUserRequest:
+    description: Update user request structure
     properties:
       age:
         description: User age
+        example: 25
         minimum: 18
         type: integer
+        x-order: "2"
       email:
         description: User email
+        example: new@example.com
         type: string
+        x-order: "1"
       user_name:
         description: User name
+        example: Pepe new
         maxLength: 20
         minLength: 3
         type: string
+        x-order: "0"
     required:
     - age
     - email
     - user_name
     type: object
   response.AchievementResponse:
+    description: Achievement response structure
     properties:
       description:
         description: Achievement description
+        example: Kill the first enemy
         maxLength: 255
         minLength: 5
         type: string
+        x-order: "2"
       id:
-        description: Achievement ID (primary key) in the database
+        description: Achievement ID
+        example: 1
         type: integer
+        x-order: "0"
       name:
         description: Achievement name
         maxLength: 255
         minLength: 3
         type: string
+        x-order: "1"
     required:
     - description
     - id
@@ -169,7 +228,6 @@ definitions:
     properties:
       code:
         description: HTTP status code of the response
-        example: 200
         type: integer
         x-order: "0"
       data:
@@ -177,14 +235,59 @@ definitions:
         x-order: "3"
       message:
         description: Message of the response
-        example: Operation completed successfully
         type: string
         x-order: "2"
       status:
         description: Status of the response
-        example: success
         type: string
         x-order: "1"
+    type: object
+  response.PlayerProfileResponse:
+    description: Player profile response structure
+    properties:
+      avatar:
+        description: Player avatar URL
+        example: https://example.com/avatar.png
+        type: string
+        x-order: "2"
+      experience:
+        description: Player experience
+        example: 100
+        type: integer
+        x-order: "4"
+      id:
+        description: Player ID (primary key) in the database
+        example: 1
+        type: integer
+        x-order: "0"
+      level:
+        description: Player level
+        example: 1
+        type: integer
+        x-order: "3"
+      nickname:
+        description: Player nickname
+        example: elPepe123
+        type: string
+        x-order: "1"
+      points:
+        description: Player points
+        example: 100
+        type: integer
+        x-order: "5"
+      user_id:
+        description: User ID (foreign key) in the database
+        example: 1
+        type: integer
+        x-order: "6"
+    required:
+    - avatar
+    - experience
+    - id
+    - level
+    - nickname
+    - points
+    - user_id
     type: object
 host: localhost:8080
 info:
@@ -230,6 +333,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get all achievements
       tags:
       - Achievement
@@ -259,6 +364,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new achievement
       tags:
       - Achievement
@@ -288,6 +395,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Delete an achievement
       tags:
       - Achievement
@@ -307,7 +416,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.BaseResponse'
+            allOf:
+            - $ref: '#/definitions/response.BaseResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.AchievementResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -316,6 +430,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get an achievement by ID
       tags:
       - Achievement
@@ -350,6 +466,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Update an achievement
       tags:
       - Achievement
@@ -379,6 +497,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get an achievement with players
       tags:
       - Achievement
@@ -433,7 +553,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.BaseResponse'
+            allOf:
+            - $ref: '#/definitions/response.BaseResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.PlayerProfileResponse'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -442,6 +569,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get all players
       tags:
       - Player
@@ -471,6 +600,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new player profile
       tags:
       - Player
@@ -500,6 +631,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Delete player by ID
       tags:
       - Player
@@ -519,7 +652,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.BaseResponse'
+            allOf:
+            - $ref: '#/definitions/response.BaseResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PlayerProfileResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -528,6 +666,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get player by ID
       tags:
       - Player
@@ -562,6 +702,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Update player by ID
       tags:
       - Player
@@ -591,6 +733,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
       summary: Get player with achievements by ID
       tags:
       - Player

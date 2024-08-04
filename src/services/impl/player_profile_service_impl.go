@@ -8,6 +8,7 @@ import (
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 )
 
 type PlayerProfileServiceImpl struct {
@@ -20,6 +21,7 @@ type PlayerProfileServiceImpl struct {
 func (p *PlayerProfileServiceImpl) GetPlayerWithAchievements(playerProfileID uint) (*response.PlayerWithAchievements, error) {
 	playerProfile, err := p.PlayerProfileRepository.GetPlayerWithAchievements(playerProfileID)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.GetPlayerWithAchievements] Failed to get player with achievements")
 		return nil, err
 	}
 
@@ -43,6 +45,7 @@ func (p *PlayerProfileServiceImpl) GetPlayerWithAchievements(playerProfileID uin
 func (p *PlayerProfileServiceImpl) Create(playerProfile request.CreatePlayerProfileRequest) error {
 	err := p.Validate.Struct(playerProfile)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Create] Failed to validate player profile data")
 		return helpers.ErrPlayerProfileDataValidation
 	}
 
@@ -57,6 +60,7 @@ func (p *PlayerProfileServiceImpl) Create(playerProfile request.CreatePlayerProf
 
 	err = p.PlayerProfileRepository.CreatePlayerProfile(&playerProfileModel)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Create] Failed to create player profile")
 		return helpers.ErrRepository
 	}
 
@@ -71,6 +75,7 @@ func (p *PlayerProfileServiceImpl) Delete(playerProfileID uint) error {
 
 	err := p.PlayerProfileRepository.DeletePlayerProfile(playerProfileID)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Delete] Failed to delete player profile")
 		return helpers.ErrRepository
 	}
 
@@ -88,6 +93,7 @@ func (p *PlayerProfileServiceImpl) GetAll(page int, pageSize int) ([]response.Pl
 
 	playerProfiles, err := p.PlayerProfileRepository.GetAllPlayerProfiles(offset, pageSize)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.GetAll] Failed to get all player profiles")
 		return nil, helpers.ErrRepository
 	}
 
@@ -118,6 +124,7 @@ func (p *PlayerProfileServiceImpl) GetByID(playerProfileID uint) (*response.Play
 
 	playerProfile, err := p.PlayerProfileRepository.GetPlayerProfile(playerProfileID)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.GetByID] Failed to get player profile")
 		return nil, err
 	}
 
@@ -144,12 +151,14 @@ func (p *PlayerProfileServiceImpl) Update(playerProfileID uint, playerProfile re
 	}
 
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Update] Failed to get player profile")
 		return err
 	}
 
 	err = p.Validate.Struct(playerProfile)
 
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Update] Failed to validate player profile data")
 		return helpers.ErrPlayerProfileDataValidation
 	}
 
@@ -161,6 +170,7 @@ func (p *PlayerProfileServiceImpl) Update(playerProfileID uint, playerProfile re
 
 	err = p.PlayerProfileRepository.UpdatePlayerProfile(playerProfileID, playerData)
 	if err != nil {
+		logrus.WithError(err).Error("[PlayerProfileServiceImpl.Update] Failed to update player profile")
 		return err
 	}
 

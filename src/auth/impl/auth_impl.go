@@ -2,13 +2,14 @@ package impl
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/dieg0code/player-profile/src/auth"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("secret")
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type AuthImpl struct{}
 

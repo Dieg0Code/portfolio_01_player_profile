@@ -32,6 +32,7 @@ func NewPlayerProfileController(service services.PlayerProfileService) *PlayerPr
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/players [post]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context) {
 	createPlayerProfileRequest := request.CreatePlayerProfileRequest{}
 
@@ -80,10 +81,11 @@ func (controller *PlayerProfileController) CreatePlayerProfile(ctx *gin.Context)
 //	@Produce		json
 //	@Param			page		query		int	false	"Page number"
 //	@Param			pageSize	query		int	false	"Page size"
-//	@Success		200			{object}	response.BaseResponse
+//	@Success		200			{object}	response.BaseResponse{data=[]response.PlayerProfileResponse}
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/players [get]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -145,10 +147,11 @@ func (controller *PlayerProfileController) GetAllPlayers(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			playerID	path		int	true	"Player ID"
-//	@Success		200			{object}	response.BaseResponse
+//	@Success		200			{object}	response.BaseResponse{data=response.PlayerProfileResponse}
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/players/{playerID} [get]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 
@@ -201,6 +204,7 @@ func (controller *PlayerProfileController) GetPlayerByID(ctx *gin.Context) {
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/players/{playerID} [put]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 	updatePlayerProfileRequest := request.UpdatePlayerProfileRequest{}
@@ -266,6 +270,7 @@ func (controller *PlayerProfileController) UpdatePlayer(ctx *gin.Context) {
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/players/{playerID} [delete]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 
@@ -317,6 +322,7 @@ func (controller *PlayerProfileController) DeletePlayer(ctx *gin.Context) {
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/players/{playerID}/achievements [get]
+//	@Security		BearerAuth
 func (controller *PlayerProfileController) GetPlayerWithAchievements(ctx *gin.Context) {
 	playerID := ctx.Param("playerID")
 

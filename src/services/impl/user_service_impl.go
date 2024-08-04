@@ -2,6 +2,7 @@ package impl
 
 import (
 	"errors"
+	"os"
 
 	"github.com/dieg0code/player-profile/src/data/request"
 	"github.com/dieg0code/player-profile/src/data/response"
@@ -10,6 +11,7 @@ import (
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 )
 
 type UserServiceImpl struct {
@@ -23,11 +25,13 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 
 	err := u.Validate.Struct(user)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Create] Failed to validate user data")
 		return err
 	}
 
 	hashedPassword, err := u.PasswordHasher.HashPassword(user.Password)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Create] Failed to hash password")
 		return errors.New("failed to hash password")
 	}
 
@@ -36,11 +40,12 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 		PassWord: string(hashedPassword),
 		Email:    user.Email,
 		Age:      user.Age,
-		Role:     "user",
+		Role:     os.Getenv("DEFAULT_ROLE"),
 	}
 
 	err = u.UserRepository.CreateUser(&userModel)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Create] Failed to create user")
 		return errors.New("email already exists")
 	}
 
@@ -56,6 +61,7 @@ func (u *UserServiceImpl) Delete(userID uint) error {
 
 	err := u.UserRepository.DeleteUser(userID)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Delete] Failed to delete user")
 		return err
 	}
 
@@ -73,6 +79,7 @@ func (u *UserServiceImpl) GetAll(page int, pageSize int) ([]response.UserRespons
 
 	users, err := u.UserRepository.GetAllUsers(offset, pageSize)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.GetAll] Failed to get all users")
 		return nil, err
 	}
 
@@ -87,6 +94,7 @@ func (u *UserServiceImpl) GetAll(page int, pageSize int) ([]response.UserRespons
 
 		err = u.Validate.Struct(userResponse)
 		if err != nil {
+			logrus.WithError(err).Error("[UserServiceImpl.GetAll] Failed to validate user data")
 			return nil, helpers.ErrUserDataValidation
 		}
 
@@ -105,6 +113,7 @@ func (u *UserServiceImpl) GetByID(userID uint) (*response.UserResponse, error) {
 
 	user, err := u.UserRepository.GetUser(userID)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.GetByID] Failed to get user")
 		return nil, err
 	}
 
@@ -121,6 +130,7 @@ func (u *UserServiceImpl) GetByID(userID uint) (*response.UserResponse, error) {
 
 	err = u.Validate.Struct(userResponse)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.GetByID] Failed to validate user data")
 		return nil, helpers.ErrUserDataValidation
 	}
 
@@ -132,11 +142,13 @@ func (u *UserServiceImpl) Update(userID uint, user request.UpdateUserRequest) er
 
 	userData, err := u.UserRepository.GetUser(userID)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Update] Failed to get user")
 		return err
 	}
 
 	err = u.Validate.Struct(user)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Update] Failed to validate user data")
 		return err
 	}
 
@@ -146,6 +158,7 @@ func (u *UserServiceImpl) Update(userID uint, user request.UpdateUserRequest) er
 
 	err = u.UserRepository.UpdateUser(userID, userData)
 	if err != nil {
+		logrus.WithError(err).Error("[UserServiceImpl.Update] Failed to update user")
 		return err
 	}
 

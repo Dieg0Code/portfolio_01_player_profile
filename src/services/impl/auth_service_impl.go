@@ -9,6 +9,7 @@ import (
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 )
 
 type AuthServiceImpl struct {
@@ -23,24 +24,28 @@ func (a *AuthServiceImpl) Login(loginRequest request.LoginRequest) (*response.Lo
 	// Validación de la solicitud
 	err := a.Validate.Struct(loginRequest)
 	if err != nil {
+		logrus.WithError(err).Error("[AuthServiceImpl.Login] Failed to validate login request")
 		return nil, err
 	}
 
 	// Búsqueda del usuario por correo electrónico
 	user, err := a.UserRepository.FindByEmail(loginRequest.Email)
 	if err != nil {
+		logrus.WithError(err).Error("[AuthServiceImpl.Login] Failed to find user by email")
 		return nil, errors.New("user not found")
 	}
 
 	// Comparación de la contraseña
 	err = a.PasswordHasher.ComparePassword(user.PassWord, loginRequest.Password)
 	if err != nil {
+		logrus.WithError(err).Error("[AuthServiceImpl.Login] Failed to compare password")
 		return nil, errors.New("invalid credentials")
 	}
 
 	// Generación del token
 	token, err := a.AuthUtils.GenerateToken(user.ID, user.Role)
 	if err != nil {
+		logrus.WithError(err).Error("[AuthServiceImpl.Login] Failed to generate token")
 		return nil, errors.New("failed to generate token")
 	}
 

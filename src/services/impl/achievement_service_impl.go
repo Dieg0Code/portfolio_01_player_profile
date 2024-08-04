@@ -8,6 +8,7 @@ import (
 	"github.com/dieg0code/player-profile/src/repository"
 	"github.com/dieg0code/player-profile/src/services"
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 )
 
 type AchievementServiceImpl struct {
@@ -21,6 +22,7 @@ func (a *AchievementServiceImpl) GetAchievementWithPlayers(achievementID uint) (
 	achievement, err := a.AchievementRepository.GetAchievementWithPlayers(achievementID)
 
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.GetAchievementWithPlayers] Failed to get achievement with players")
 		return nil, helpers.ErrAchievementRepository
 	}
 
@@ -43,6 +45,7 @@ func (a *AchievementServiceImpl) GetAchievementWithPlayers(achievementID uint) (
 func (a *AchievementServiceImpl) Create(achievement request.CreateAchievementRequest) error {
 	err := a.Validate.Struct(achievement)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Create] Failed to validate achievement data")
 		return helpers.ErrAchievementDataValidation
 	}
 
@@ -53,6 +56,7 @@ func (a *AchievementServiceImpl) Create(achievement request.CreateAchievementReq
 
 	err = a.AchievementRepository.CreateAchievement(&achievementModel)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Create] Failed to create achievement")
 		return helpers.ErrAchievementRepository
 	}
 
@@ -68,6 +72,7 @@ func (a *AchievementServiceImpl) Delete(achievementID uint) error {
 
 	err := a.AchievementRepository.DeleteAchievement(achievementID)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Delete] Failed to delete achievement")
 		return helpers.ErrAchievementRepository
 	}
 
@@ -84,6 +89,7 @@ func (a *AchievementServiceImpl) GetAll(page int, pageSize int) ([]response.Achi
 
 	achievements, err := a.AchievementRepository.GetAllAchievements(offset, pageSize)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.GetAll] Failed to get all achievements")
 		return nil, helpers.ErrAchievementRepository
 	}
 
@@ -97,6 +103,7 @@ func (a *AchievementServiceImpl) GetAll(page int, pageSize int) ([]response.Achi
 
 		err = a.Validate.Struct(achievementResponse)
 		if err != nil {
+			logrus.WithError(err).Error("[AchievementServiceImpl.GetAll] Failed to validate achievement data")
 			return nil, helpers.ErrAchievementDataValidation
 		}
 
@@ -114,6 +121,7 @@ func (a *AchievementServiceImpl) GetByID(achievementID uint) (*response.Achievem
 
 	achievement, err := a.AchievementRepository.GetAchievement(achievementID)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.GetByID] Failed to get achievement")
 		return nil, helpers.ErrAchievementRepository
 	}
 
@@ -129,6 +137,7 @@ func (a *AchievementServiceImpl) GetByID(achievementID uint) (*response.Achievem
 
 	err = a.Validate.Struct(achievementResponse)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.GetByID] Failed to validate achievement data")
 		return nil, helpers.ErrAchievementDataValidation
 	}
 
@@ -143,11 +152,13 @@ func (a *AchievementServiceImpl) Update(achievementID uint, achievement request.
 
 	err := a.Validate.Struct(achievement)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Update] Failed to validate achievement data")
 		return helpers.ErrAchievementDataValidation
 	}
 
 	achievementModel, err := a.AchievementRepository.GetAchievement(achievementID)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Update] Failed to get achievement")
 		return helpers.ErrAchievementRepository
 	}
 
@@ -160,6 +171,7 @@ func (a *AchievementServiceImpl) Update(achievementID uint, achievement request.
 
 	err = a.AchievementRepository.UpdateAchievement(achievementID, achievementModel)
 	if err != nil {
+		logrus.WithError(err).Error("[AchievementServiceImpl.Update] Failed to update achievement")
 		return helpers.ErrAchievementRepository
 	}
 

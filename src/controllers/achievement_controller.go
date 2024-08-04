@@ -31,6 +31,7 @@ func NewAchievementController(service services.AchievementService) *AchievementC
 //	@Failure		400		{object}	response.BaseResponse
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/achievements [post]
+//	@Security		BearerAuth
 func (controller *AchievementController) CreateAchievement(ctx *gin.Context) {
 	createAchievementRequest := request.CreateAchievementRequest{}
 
@@ -83,6 +84,7 @@ func (controller *AchievementController) CreateAchievement(ctx *gin.Context) {
 //	@Failure		400			{object}	response.BaseResponse
 //	@Failure		500			{object}	response.BaseResponse
 //	@Router			/achievements [get]
+//	@Security		BearerAuth
 func (controller *AchievementController) GetAllAchievements(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -144,10 +146,11 @@ func (controller *AchievementController) GetAllAchievements(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			achievementID	path		int	true	"Achievement ID"
-//	@Success		200				{object}	response.BaseResponse
+//	@Success		200				{object}	response.BaseResponse{data=response.AchievementResponse}
 //	@Failure		400				{object}	response.BaseResponse
 //	@Failure		500				{object}	response.BaseResponse
 //	@Router			/achievements/{achievementID} [get]
+//	@Security		BearerAuth
 func (controller *AchievementController) GetAchievementByID(ctx *gin.Context) {
 	achivementID := ctx.Param("achievementID")
 
@@ -200,6 +203,7 @@ func (controller *AchievementController) GetAchievementByID(ctx *gin.Context) {
 //	@Failure		400				{object}	response.BaseResponse
 //	@Failure		500				{object}	response.BaseResponse
 //	@Router			/achievements/{achievementID} [put]
+//	@Security		BearerAuth
 func (controller *AchievementController) UpdateAchievement(ctx *gin.Context) {
 	achievementID := ctx.Param("achievementID")
 	updateAchievementRequest := request.UpdateAchievementRequest{}
@@ -265,6 +269,7 @@ func (controller *AchievementController) UpdateAchievement(ctx *gin.Context) {
 //	@Failure		400				{object}	response.BaseResponse
 //	@Failure		500				{object}	response.BaseResponse
 //	@Router			/achievements/{achievementID} [delete]
+//	@Security		BearerAuth
 func (controller *AchievementController) DeleteAchievement(ctx *gin.Context) {
 	achievementID := ctx.Param("achievementID")
 
@@ -316,6 +321,7 @@ func (controller *AchievementController) DeleteAchievement(ctx *gin.Context) {
 //	@Failure		400				{object}	response.BaseResponse
 //	@Failure		500				{object}	response.BaseResponse
 //	@Router			/achievements/{achievementID}/players [get]
+//	@Security		BearerAuth
 func (controller *AchievementController) GetAchievementWithPlayers(ctx *gin.Context) {
 	achievementID := ctx.Param("achievementID")
 

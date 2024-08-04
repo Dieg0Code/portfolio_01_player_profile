@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	gorm.Model
-	UserName string          `gorm:"type:varchar(255);unique;not null" validate:"required"`
+	UserName string          `gorm:"type:varchar(255);not null" validate:"required"`
 	PassWord string          `gorm:"type:varchar(255);not null" validate:"required"`
 	Email    string          `gorm:"type:varchar(255);unique;not null" validate:"required"`
 	Age      int             `gorm:"type:int;not null" validate:"required"`

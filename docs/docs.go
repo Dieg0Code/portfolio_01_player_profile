@@ -626,6 +626,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all users, can be paginated, default page is 1 and default pageSize is 10",
                 "consumes": [
                     "application/json"
@@ -721,6 +726,11 @@ const docTemplate = `{
         },
         "/users/{userID}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get user by ID",
                 "consumes": [
                     "application/json"
@@ -760,10 +770,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                },
-                "x-order": 2
+                }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update user by ID",
                 "consumes": [
                     "application/json"
@@ -812,10 +826,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                },
-                "x-order": 3
+                }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete user by ID",
                 "consumes": [
                     "application/json"
@@ -855,8 +873,7 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BaseResponse"
                         }
                     }
-                },
-                "x-order": 4
+                }
             }
         }
     },
@@ -1103,6 +1120,13 @@ const docTemplate = `{
                     "x-order": "3"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "tags": [

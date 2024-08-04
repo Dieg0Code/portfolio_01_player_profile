@@ -55,7 +55,7 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 		errorResponse := response.BaseResponse{
 			Code:    500,
 			Status:  "Error",
-			Message: "Failed to create user",
+			Message: err.Error(),
 			Data:    nil,
 		}
 
@@ -80,14 +80,16 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 //	@Tags			User
 //	@Accept			json
 //	@Produce		json
-//	@Param			page		query		int	false	"Page number"
-//	@Param			pageSize	query		int	false	"Page size"
-//	@Success		200			{object}	response.BaseResponse
-//	@Failure		400			{object}	response.BaseResponse
-//	@Failure		500			{object}	response.BaseResponse
+//	@Param			page			query	int		false	"Page number"
+//	@Param			pageSize		query	int		false	"Page size"
+//
+//	@Success		200	{object}	response.BaseResponse
+//	@Failure		400	{object}	response.BaseResponse
+//	@Failure		500	{object}	response.BaseResponse
 //	@Router			/users [get]
 //
 //	@x-order		1
+//	@Security		BearerAuth
 func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("pageSize", "10")
@@ -154,7 +156,7 @@ func (controller *UserController) GetAllUsers(ctx *gin.Context) {
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [get]
 //
-//	@x-order		2
+//	@Security		BearerAuth
 func (controller *UserController) GetUserByID(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -210,7 +212,7 @@ func (controller *UserController) GetUserByID(ctx *gin.Context) {
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [put]
 //
-//	@x-order		3
+//	@Security		BearerAuth
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
@@ -280,7 +282,7 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 //	@Failure		500		{object}	response.BaseResponse
 //	@Router			/users/{userID} [delete]
 //
-//	@x-order		4
+//	@Security		BearerAuth
 func (controller *UserController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 

@@ -11,6 +11,7 @@ var ErrorUserNotFound = errors.New("user not found")
 var ErrorUpdateUser = errors.New("error updating user")
 var ErrorDeleteUser = errors.New("error deleting user")
 var ErrorGetAllUsers = errors.New("error getting all users")
+var ErrDuplicatedKey = errors.New("user name or email already exists")
 
 // Player Profile errors.
 var ErrorPlayerProfileNotFound = errors.New("player profile not found")

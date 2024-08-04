@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"errors"
+
 	"github.com/dieg0code/player-profile/src/data/request"
 	"github.com/dieg0code/player-profile/src/data/response"
 	"github.com/dieg0code/player-profile/src/helpers"
@@ -26,7 +28,7 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 
 	hashedPassword, err := u.PasswordHasher.HashPassword(user.Password)
 	if err != nil {
-		return err
+		return errors.New("failed to hash password")
 	}
 
 	userModel := models.User{
@@ -39,7 +41,7 @@ func (u *UserServiceImpl) Create(user request.CreateUserRequest) error {
 
 	err = u.UserRepository.CreateUser(&userModel)
 	if err != nil {
-		return err
+		return errors.New("email already exists")
 	}
 
 	return nil

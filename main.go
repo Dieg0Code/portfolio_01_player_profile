@@ -25,10 +25,14 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/api/v1
 
-// @tag.name Auth
-// @tag.name User
-// @tag.name Player
-// @tag.name Achievement
+//	@tag.name	Auth
+//	@tag.name	User
+//	@tag.name	Player
+//	@tag.name	Achievement
+
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
 func main() {
 	// Load .env file
 	err := godotenv.Load()

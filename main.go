@@ -30,9 +30,9 @@ import (
 //	@tag.name	Player
 //	@tag.name	Achievement
 
-//	@securityDefinitions.apikey	BearerAuth
-//	@in							header
-//	@name						Authorization
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
 func main() {
 	// Load .env file
 	err := godotenv.Load()

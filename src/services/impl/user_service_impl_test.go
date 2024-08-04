@@ -2,6 +2,7 @@ package impl
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/dieg0code/player-profile/src/data/request"
@@ -38,7 +39,7 @@ func TestUserServiceImpl_Create(t *testing.T) {
 			PassWord: hashedPassword,
 			Email:    testUser.Email,
 			Age:      testUser.Age,
-			Role:     "user",
+			Role:     os.Getenv("DEFAULT_ROLE"),
 		}).Return(nil)
 
 		err := userService.Create(testUser)
@@ -110,7 +111,7 @@ func TestUserServiceImpl_Create(t *testing.T) {
 			PassWord: hashedPassword,
 			Email:    testUser.Email,
 			Age:      testUser.Age,
-			Role:     "user",
+			Role:     os.Getenv("DEFAULT_ROLE"),
 		}).Return(errors.New("repository error"))
 
 		err := userService.Create(testUser)

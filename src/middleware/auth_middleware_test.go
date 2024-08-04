@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,7 @@ func TestAuthMiddleware(t *testing.T) {
 			"role":   "admin",
 		})
 
-		tokenString, err := token.SignedString([]byte("secret"))
+		tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 		assert.Nil(t, err, "Expected no error signing token")
 
 		req, err := http.NewRequest(http.MethodGet, "/test", nil)

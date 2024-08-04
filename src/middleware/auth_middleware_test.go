@@ -138,7 +138,8 @@ func TestAuthMiddleware(t *testing.T) {
 		router.ServeHTTP(rec, req)
 
 		var response response.BaseResponse
-		json.Unmarshal(rec.Body.Bytes(), &response)
+		err = json.Unmarshal(rec.Body.Bytes(), &response)
+		assert.NoError(t, err, "Expected no error unmarshalling response")
 
 		assert.Equal(t, http.StatusUnauthorized, rec.Code, "Expected status code 401")
 		assert.Equal(t, "Invalid token", response.Message, "Expected response message to be 'Unauthorized'")

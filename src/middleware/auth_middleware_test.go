@@ -171,4 +171,5 @@ func TestAuthMiddleware(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, rec.Code, "Expected status code 401")
 		assert.Contains(t, rec.Body.String(), "Invalid token", "Expected response body to contain 'Invalid token'")
 	})
+
 }

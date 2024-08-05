@@ -62,4 +62,31 @@ func TestAuthController_Login(t *testing.T) {
 
 		mockAuthService.AssertExpectations(t)
 	})
+
+	t.Run("Login_Fail", func(t *testing.T) {
+		loginReq := request.LoginRequest{
+			Email:    "invalid",
+			Password: "invalid",
+		}
+
+		mockAuthService.On("Login", loginReq).Return(&response.LoginResponse{}, assert.AnError)
+
+		body, err := json.Marshal(loginReq)
+		assert.Nil(t, err)
+		req, err := http.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(body))
+		assert.NoError(t, err, "Expected no error creating request")
+
+		req.Header.Set("Content-Type", "application/json")
+
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+
+		var response response.BaseResponse
+		err = json.NewDecoder(rec.Body).Decode(&response)
+		assert.Nil(t, err, "Expected no error decoding response")
+		assert.Equal(t, http.StatusInternalServerError, rec.Code, "Expected status code 500")
+		assert.Equal(t, "Failed to login", response.Message)
+		assert.Nil(t, response.Data)
+
+	})
 }

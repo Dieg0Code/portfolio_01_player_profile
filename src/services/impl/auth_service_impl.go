@@ -25,7 +25,7 @@ func (a *AuthServiceImpl) Login(loginRequest request.LoginRequest) (*response.Lo
 	err := a.Validate.Struct(loginRequest)
 	if err != nil {
 		logrus.WithError(err).Error("[AuthServiceImpl.Login] Failed to validate login request")
-		return nil, err
+		return nil, errors.New("invalid request body")
 	}
 
 	// Búsqueda del usuario por correo electrónico

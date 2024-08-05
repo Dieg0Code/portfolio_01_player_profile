@@ -58,6 +58,18 @@ func (controller *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
+	if loginResponse == nil {
+		errorResponse := response.BaseResponse{
+			Code:    500,
+			Status:  "Error",
+			Message: "Failed to login",
+			Data:    nil,
+		}
+
+		ctx.JSON(500, errorResponse)
+		return
+	}
+
 	ctx.Header("Authorization", "Bearer "+loginResponse.Token)
 
 	webResponse := response.BaseResponse{

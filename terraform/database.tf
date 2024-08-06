@@ -1,5 +1,5 @@
 resource "aws_db_instance" "db_instance" {
-  storage_encrypted       = false
+  storage_encrypted       = true
   allocated_storage       = 20
   storage_type            = "gp2"
   engine                  = "postgres"

@@ -113,4 +113,12 @@ resource "aws_lb" "load_balancer" {
   load_balancer_type = "application"
   subnets            = [aws_default_subnet.default_subnet.id]
   security_groups    = [aws_security_group.instances.id]
+
+  enable_deletion_protection = false
+
+  access_logs {
+    bucket = aws_s3_bucket.lb_logs.bucket
+    prefix = "lb"
+    enabled = true
+  }
 }

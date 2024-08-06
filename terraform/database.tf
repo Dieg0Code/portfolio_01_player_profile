@@ -1,4 +1,5 @@
 resource "aws_db_instance" "db_instance" {
+  storage_encrypted       = false
   allocated_storage       = 20
   storage_type            = "gp2"
   engine                  = "postgres"
@@ -8,7 +9,7 @@ resource "aws_db_instance" "db_instance" {
   username                = var.db_user
   password                = var.db_password
   skip_final_snapshot     = true
-  backup_retention_period = 0
+  backup_retention_period = 7
   multi_az                = false
   publicly_accessible     = false
 

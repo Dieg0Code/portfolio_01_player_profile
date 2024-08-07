@@ -5,7 +5,6 @@ resource "aws_s3_bucket" "lb_logs" {
     Name        = "${var.app_name}-${var.environment}-lb-logs"
     Environment = var.environment
   }
-
 }
 
 resource "aws_s3_bucket_public_access_block" "lb_logs_public_access_block" {
@@ -25,11 +24,28 @@ resource "aws_s3_bucket_versioning" "lb_bucket_versioning" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "lb_bucket_crypto_conf" {
-  bucket = aws_s3_bucket.lb_logs.bucket
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
+resource "aws_s3_bucket_policy" "lb_logs_policy" {
+  bucket = aws_s3_bucket.lb_logs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "lb_logs_policy"
+    Statement = [
+      {
+        Sid       = "HTTPSOnly"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.lb_logs.arn,
+          "${aws_s3_bucket.lb_logs.arn}/*",
+        ]
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
+        }
+      },
+    ]
+  })
 }

@@ -1,1 +1,3 @@
 .git
+terraform/terraform.tfvars
+terraform/.terraform

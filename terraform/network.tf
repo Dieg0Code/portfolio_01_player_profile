@@ -27,20 +27,55 @@ resource "aws_security_group_rule" "allow_http_inbound" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_lb_listener" "http" {
+resource "aws_route53_zone" "primary" {
+  name = "dieg0code-api-players.duckdns.org"
+}
+
+resource "aws_acm_certificate" "cert" {
+  domain_name       = "dieg0code-api-players.duckdns.org"
+  validation_method = "DNS"
+
+  tags = {
+    Name = "${var.app_name}-${var.environment}-certificate"
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      value  = dvo.resource_record_value
+    }
+  }
+
+  name    = each.value.name
+  type    = each.value.type
+  zone_id = aws_route53_zone.primary.zone_id
+  records = [each.value.value]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "cert_validation" {
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.load_balancer.arn
-
-  port = 80
-
-  protocol = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.cert.arn
 
   default_action {
-    type = "fixed-response"
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.instances.arn
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "404: Not Found"
-      status_code  = "404"
+      message_body = "Hello, world"
+      status_code  = "200"
     }
   }
 }
@@ -69,7 +104,7 @@ resource "aws_lb_target_group_attachment" "api_instance" {
 }
 
 resource "aws_lb_listener_rule" "instances" {
-  listener_arn = aws_lb_listener.http.arn
+  listener_arn = aws_lb_listener.https.arn
   priority     = 100
 
   condition {
@@ -84,28 +119,28 @@ resource "aws_lb_listener_rule" "instances" {
   }
 }
 
-resource "aws_security_group" "alb" {
-  name = "${var.app_name}-${var.environment}-alb-security-group"
-}
+resource "aws_security_group" "lb_sg" {
+  name        = "${var.app_name}-${var.environment}-lb-sg"
+  description = "Allow HTTPS traffic"
+  vpc_id      = aws_default_vpc.default.id
 
-resource "aws_security_group_rule" "allow_alb_http_inbound" {
-  type              = "ingress"
-  security_group_id = aws_security_group.alb.id
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  from_port   = 80
-  to_port     = 80
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
-}
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "allow_alb_all_outbound" {
-  type              = "egress"
-  security_group_id = aws_security_group.alb.id
-
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "${var.app_name}-${var.environment}-lb-sg"
+  }
 }
 
 resource "aws_lb" "load_balancer" {

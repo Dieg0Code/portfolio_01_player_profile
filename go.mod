@@ -4,6 +4,7 @@ go 1.22.1
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0
+	github.com/gruntwork-io/terratest v0.47.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/swaggo/files v1.0.1
@@ -42,7 +43,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
-	github.com/gruntwork-io/terratest v0.47.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-getter v1.7.5 // indirect
@@ -78,7 +78,7 @@ require (
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.114.0 // indirect
@@ -100,9 +100,9 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/gin-swagger v1.6.0
-	golang.org/x/crypto v0.25.0
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/crypto v0.27.0
+	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
